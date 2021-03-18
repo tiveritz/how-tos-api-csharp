@@ -2,6 +2,8 @@
 This Project consists of a collection of Web Applications that allow you to manage, edit and view How To's in the form of Step-By-Step procedures. An important key aspect is the modularity of the documentation. Reusable steps, pictures, explanations, links and so on are a core concept and the database is designed with that in mind.
 
 ### Web Applications
+![header image](docs/howtos_server.png?raw=true "How To's server diagram")
+
 # Core API
 The REST API that handles all database interactions on the documentation database.
 
@@ -10,9 +12,6 @@ A Website that allows users to manage the content. Consumes the Core API.
 
 # Viewer
 A Website that allows users to view the How To's. Consumes the Core API.
-
-
-![header image](docs/howtos_server.png?raw=true "How To's server diagram")
 
 ### API Core Features
 * RESTful witch JSON payload

@@ -13,6 +13,9 @@ A Website that allows users to manage the content. Consumes the Core API.
 ### Viewer
 A Website that allows users to view the How To's. Consumes the Core API.
 
+## UML
+![header image](docs/howtos_uml.png?raw=true "How To's UML")
+
 ## API Core Features
 * RESTful witch JSON payload
 * HTTPS over SSL

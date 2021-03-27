@@ -14,10 +14,10 @@ A Website that allows users to manage the content. Consumes the Core API.
 A Website that allows users to view the How To's. Consumes the Core API.
 
 ## Continuous Integration Diagram
-![](docs/howtos_server.png?raw=true "How To's server diagram")
+![](docs/howtos_ci.png?raw=true "How To's CI diagram")
 
 ## UML
-![](docs/howtos_ci.png?raw=true "How To's CI diagram")
+![](docs/howtos_uml.png?raw=true "How To's UML")
 
 
 ## API Core Features

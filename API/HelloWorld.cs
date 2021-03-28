@@ -6,8 +6,11 @@ namespace how_tos_api
     {
         public string helloWorld {get; set;}
 
-        public HelloWorld(string s) {
-            this.helloWorld = s;
+        public HelloWorld() {
+            string dbConnectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
+            MySqlConnector db = new MySqlConnector(dbConnectionString);
+
+            this.helloWorld = db.GetAll();;
         }
     }
 }

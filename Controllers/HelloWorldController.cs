@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -11,7 +12,7 @@ namespace how_tos_api.Controllers
         [HttpGet]
         public string Get()
         {
-            HelloWorld hw = new HelloWorld("Hello World");
+            HelloWorld hw = new HelloWorld();
             return hw.helloWorld;
         }
     }

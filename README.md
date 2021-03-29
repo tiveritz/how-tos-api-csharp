@@ -1,27 +1,16 @@
 # How To's ![build-status](https://img.shields.io/docker/cloud/automated/tiveritz/how-tos-api) ![build-status](https://img.shields.io/docker/cloud/build/tiveritz/how-tos-api)
 This Project consists of a collection of Web Applications that allow you to manage, edit and view How To's in the form of Step-By-Step procedures. An important key aspect is the modularity of the documentation. Reusable steps, pictures, explanations, links and so on are a core concept and the database is designed with that in mind.
 
-
-## Web Applications Diagram
-![](docs/howtos_server.png?raw=true "How To's server diagram")
-
-### Core API
+#### Core API
 The REST API that handles all database interactions on the documentation database.
 
-### Administration
+#### Administration
 A Website that allows users to manage the content. Consumes the Core API.
 
-### Viewer
+#### Viewer
 A Website that allows users to view the How To's. Consumes the Core API.
 
-## Continuous Integration Diagram
-![](docs/howtos_ci.png?raw=true "How To's CI diagram")
-
-## UML
-![](docs/howtos_uml.png?raw=true "How To's UML")
-
-
-## API Core Features
+# Core API
 * RESTful witch JSON payload
 * HTTPS over SSL
 * API versioning preparation
@@ -35,6 +24,51 @@ A Website that allows users to view the How To's. Consumes the Core API.
 * DELETE with recycle bin (Restoring may be a bit tricky, because the content is very stricktly linked)
 * Basic authentication (Over access token?)
 
+| BASE                     | URL               | GET   | POST  | PUT   | PATCH | DELETE |
+| ------------------------ | ----------------- | :---: | :---: | :---: | :---: | :----: |
+| api.tiveritz.at/hwts/v1/ | howtos            |   ✓   |   ✓   |       |       |        |
+| api.tiveritz.at/hwts/v1/ | howtos/count      |   ✓   |       |       |       |        |
+| api.tiveritz.at/hwts/v1/ | howtos/{id}       |   ✓   |       |       |   ✓   |   ✓    |
+| api.tiveritz.at/hwts/v1/ | howtos/{id}/steps |   ✓   |       |       |       |        |
+| api.tiveritz.at/hwts/v1/ | steps             |   ✓   |   ✓   |       |       |        |
+| api.tiveritz.at/hwts/v1/ | steps/count       |   ✓   |       |       |       |        |
+| api.tiveritz.at/hwts/v1/ | steps/{id}        |   ✓   |       |       |   ✓   |   ✓    |
+
+#### howtos
+GET a list of all How To's  
+POST a new How To
+
+#### howtos/count
+GET number of all available How To's  
+
+#### howtos/{id}
+GET a specific How To  
+PATCH (Update) information of a specific How To
+DELETE a specific How To
+
+#### howtos/{id}/steps
+GET all steps of a specific How To with info if it is a Substep or Superstep  
+
+#### steps
+GET number of all available Steps with info if it is a Substep or Superstep
+POST a new Step
+
+#### steps/count
+GET number of all available Steps
+
+#### steps/{id}
+GET a specific step  
+PATCH (Update) information of a specific Step
+DELETE a specific step
+
+## Web Applications Diagram
+![](docs/howtos_server.png?raw=true "How To's server diagram")
+
+## Continuous Integration Diagram
+![](docs/howtos_ci.png?raw=true "How To's CI diagram")
+
+## UML
+![](docs/howtos_uml.png?raw=true "How To's UML")
 
 ## Documentation Core Features
 Depending on the complexity and time of the project various features can be implemented. Sorted by priority descending.

@@ -35,30 +35,30 @@ A Website that allows users to view the How To's. Consumes the Core API.
 | api.tiveritz.at/hwts/v1/ | steps/{id}        |   ✓   |       |       |   ✓   |   ✓    |
 
 #### howtos
-GET a list of all How To's  
+GET a list of all How To's<br/>
 POST a new How To
 
 #### howtos/count
-GET number of all available How To's  
+GET number of all available How To's<br/>
 
 #### howtos/{id}
-GET a specific How To  
-PATCH (Update) information of a specific How To
+GET a specific How To<br/>
+PATCH (Update) information of a specific How To<br/>
 DELETE a specific How To
 
 #### howtos/{id}/steps
-GET all steps of a specific How To with info if it is a Substep or Superstep  
+GET all steps of a specific How To with info if it is a Substep or Superstep<br/>
 
 #### steps
-GET number of all available Steps with info if it is a Substep or Superstep
+GET number of all available Steps with info if it is a Substep or Superstep<br/>
 POST a new Step
 
 #### steps/count
 GET number of all available Steps
 
 #### steps/{id}
-GET a specific step  
-PATCH (Update) information of a specific Step
+GET a specific step<br/>
+PATCH (Update) information of a specific Step<br/>
 DELETE a specific step
 
 ## Web Applications Diagram

@@ -2,17 +2,19 @@ using System;
 using System.Text;
 using MySql.Data.MySqlClient;
 
-namespace how_tos_api
+namespace HowTosApi
 {
-    class MySqlConnector
+    public class AppDb
     {
-        private MySqlConnection SQL;
+        public MySqlConnection Connection {get;}
 
-        public MySqlConnector(string dbConnectionString) {
-            this.SQL = new MySqlConnection(dbConnectionString);
+        public AppDb(string dbConnectionString) {
+            this.Connection = new MySqlConnection(dbConnectionString);
 
         }
 
+
+/*
         public string GetAll()
         {
             StringBuilder result = new StringBuilder();
@@ -46,5 +48,6 @@ namespace how_tos_api
 
             return result.ToString();
         }
+        */
     }
 }

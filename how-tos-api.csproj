@@ -4,7 +4,9 @@
     <RootNamespace>how_tos_api</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3"/>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.1"/>
     <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.22"/>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0"/>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0"/>
   </ItemGroup>
 </Project>

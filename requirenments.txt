@@ -1,0 +1,4 @@
+MySql.Data.EntityFrameworkCore = 8.0.22
+Microsoft.AspNetCore.Mvc.Versioning = 5.0.0
+Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer = 5.0.0
+Swashbuckle.AspNetCore = 6.1.1

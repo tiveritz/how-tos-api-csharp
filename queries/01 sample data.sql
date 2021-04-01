@@ -4,6 +4,10 @@ INSERT INTO HowTos (title) VALUES ('How to Run SQL Statements'); #1
 INSERT INTO HowTos (title) VALUES ('How to Drink Beer'); #2
 INSERT INTO HowTos (title) VALUES ('How to Watch Rick and Morty'); #3
 
+/* Create HowTosUriIds */
+INSERT INTO HowTosUriIds (how_to_id, uri_id) VALUES (1, "a9d8cd7a"); #1
+INSERT INTO HowTosUriIds (how_to_id, uri_id) VALUES (2, "l9d86e5s"); #2
+INSERT INTO HowTosUriIds (how_to_id, uri_id) VALUES (3, "pic9d876"); #3
 
 
 /* Create Steps */

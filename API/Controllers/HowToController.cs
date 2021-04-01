@@ -5,7 +5,8 @@ using System.Collections.Generic;
 
 namespace HowTosApi.Controllers
 {
-    [Route("hwts/v1/[controller]")]
+    [ApiVersion("1")]
+    [Route("hwts/v{v:apiVersion}/[controller]")]
     [ApiController]
     public class HowTosController : ControllerBase
     {
@@ -23,8 +24,9 @@ namespace HowTosApi.Controllers
             return Ok(htq.GetAll());
         }
 
-        [Route("{id}")] //hwts/v1/howtos/2
-        public IActionResult GetHowToById(int id)
+        [Route("{id}")] //hwts/v1/howtos/a9d8cd7a
+        [HttpGet]
+        public IActionResult GetHowToById(string id)
         {
             HowToQuery htq = new HowToQuery(Db);
             return Ok(htq.GetOne(id));

@@ -5,9 +5,33 @@ SELECT * FROM Sub;
 SELECT * FROM Super;
 
 
-/* -- List title, creation date, update date of all HowTos */
-SELECT title, ts_create, ts_update
+/* -- List all HowTos */
+SELECT HowTosUriIds.uri_id, HowTos.title, HowTos.ts_create, HowTos.ts_update
+FROM HowTos
+JOIN HowTosUriIds ON HowTos.id=HowTosUriIds.how_to_id;
+
+SELECT id, title, ts_create, ts_update
 FROM HowTos;
+
+/* -- List specific HowTo */
+SELECT HowTosUriIds.uri_id, HowTos.title, HowTos.ts_create, HowTos.ts_update
+FROM HowTos
+JOIN HowTosUriIds ON HowTos.id=HowTosUriIds.how_to_id
+WHERE uri_id="a9d8cd7a";
+
+SELECT id, title, ts_create, ts_update
+FROM HowTos
+WHERE id=1;
+
+/* Get HowToId from UriId */
+SELECT uri_id
+FROM HowTosUriIds
+WHERE how_to_id=1;
+
+/* Get UriId from HowToId */
+SELECT how_to_id
+FROM HowTosUriIds
+WHERE uri_id="a9d8cd7a";
 
 /* -- List title, creation date, update date and if super of all Steps */
 SELECT title, ts_create, ts_update,

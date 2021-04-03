@@ -40,12 +40,16 @@ namespace HowTosApi
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "HowTosApi", Version = "v1" });
             });
             services.AddTransient<AppDb>(_ => new AppDb(Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")));
+            services.AddVersionedApiExplorer(o =>
+                {
+                    o.GroupNameFormat = "'v'VVV";
+                    o.SubstituteApiVersionInUrl = true;
+                });
             services.AddApiVersioning(options => {
                 options.ReportApiVersions = true;
                 options.DefaultApiVersion = new ApiVersion(1, 0);
                 options.AssumeDefaultVersionWhenUnspecified = true;
             });
-            services.AddSwaggerGen();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -10,44 +10,61 @@ SELECT HowTosUriIds.uri_id, HowTos.title, HowTos.ts_create, HowTos.ts_update
 FROM HowTos
 JOIN HowTosUriIds ON HowTos.id=HowTosUriIds.how_to_id;
 
-SELECT id, title, ts_create, ts_update
-FROM HowTos;
-
 /* -- List specific HowTo */
 SELECT HowTosUriIds.uri_id, HowTos.title, HowTos.ts_create, HowTos.ts_update
 FROM HowTos
 JOIN HowTosUriIds ON HowTos.id=HowTosUriIds.how_to_id
 WHERE uri_id="a9d8cd7a";
 
-SELECT id, title, ts_create, ts_update
-FROM HowTos
-WHERE id=1;
-
-/* Get HowToId from UriId */
+/* Get UriId from HowToId */
 SELECT uri_id
 FROM HowTosUriIds
 WHERE how_to_id=1;
 
-/* Get UriId from HowToId */
+/* Get HowToId from UriId */
 SELECT how_to_id
 FROM HowTosUriIds
 WHERE uri_id="a9d8cd7a";
 
 /* -- List title, creation date, update date and if super of all Steps */
-SELECT title, ts_create, ts_update,
-CASE
-	WHEN Steps.id IN (SELECT DISTINCT super_id FROM Super) THEN true ELSE false
-END AS is_super
-FROM Steps;
-
-/* -- List all steps of a specific HowTo, order by position */
-SELECT HowTosSteps.pos, Steps.title, Steps.ts_create, Steps.ts_update,
+SELECT StepsUriIds.uri_id, Steps.title, Steps.ts_create, Steps.ts_update,
 CASE
 	WHEN Steps.id IN (SELECT DISTINCT super_id FROM Super) THEN true ELSE false
 END AS is_super
 FROM Steps
+JOIN StepsUriIds ON Steps.id=StepsUriIds.step_id;
+
+/* -- List title, creation date, update date and if super of a specific Steps */
+SELECT StepsUriIds.uri_id, Steps.title, Steps.ts_create, Steps.ts_update,
+CASE
+	WHEN Steps.id IN (SELECT DISTINCT super_id FROM Super) THEN true ELSE false
+END AS is_super
+FROM Steps
+JOIN StepsUriIds ON Steps.id=StepsUriIds.step_id
+WHERE uri_id="2ls98s7e";
+
+/* Get StepId from UriId */
+SELECT uri_id
+FROM StepsUriIds
+WHERE step_id=1;
+
+/* Get UriId from StepId */
+SELECT step_id
+FROM StepsUriIds
+WHERE uri_id="dj8d7f6e";
+
+/* -- List all steps of a specific HowTo, order by position */
+SELECT HowTosSteps.pos, StepsUriIds.uri_id, Steps.title,
+CASE
+	WHEN Steps.id IN (SELECT DISTINCT super_id FROM Super) THEN true ELSE false
+END AS is_super
+FROM Steps
+JOIN StepsUriIds ON StepsUriIds.step_id = Steps.id
 JOIN HowTosSteps ON HowTosSteps.step_id = Steps.id
-WHERE HowTosSteps.how_to_id = '1'
+WHERE HowTosSteps.how_to_id = (
+    SELECT how_to_id
+	FROM HowTosUriIds
+	WHERE uri_id="a9d8cd7a")
 ORDER BY HowTosSteps.pos;
 
 /* -- List all substeps of a step */

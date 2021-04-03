@@ -1,6 +1,4 @@
-using System;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 
 
 namespace HowTosApi.Controllers
@@ -20,7 +18,7 @@ namespace HowTosApi.Controllers
         [HttpGet]//hwts/v1/howtos
         public IActionResult GetAllHowTos()
         {
-            HowToQuery htq = new HowToQuery(Db);
+            HowTosQuery htq = new HowTosQuery(Db);
             return Ok(htq.GetAll());
         }
 

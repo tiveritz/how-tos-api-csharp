@@ -24,7 +24,18 @@ INSERT INTO Steps (title, description) VALUES ('1 Drink Beer', 'Do Something'); 
 INSERT INTO Steps (title, description) VALUES ('2 Drink Beer', 'Do Something'); #10
 INSERT INTO Steps (title, description) VALUES ('3 Drink Beer', 'Do Something'); #11
 
-
+/* Create StepsIds */
+INSERT INTO StepsUriIds (step_id, uri_id) VALUES (1, "a93jdjc7"); #1
+INSERT INTO StepsUriIds (step_id, uri_id) VALUES (2, "d874djd9"); #2
+INSERT INTO StepsUriIds (step_id, uri_id) VALUES (3, "2ls98s7e"); #3
+INSERT INTO StepsUriIds (step_id, uri_id) VALUES (4, "djc847dj"); #4
+INSERT INTO StepsUriIds (step_id, uri_id) VALUES (5, "dj8d7f6e"); #5
+INSERT INTO StepsUriIds (step_id, uri_id) VALUES (6, "a00d9s8e"); #6
+INSERT INTO StepsUriIds (step_id, uri_id) VALUES (7, "yjd77s6e"); #7
+INSERT INTO StepsUriIds (step_id, uri_id) VALUES (8, "djf77r6e"); #8
+INSERT INTO StepsUriIds (step_id, uri_id) VALUES (9, "ka8d752g"); #9
+INSERT INTO StepsUriIds (step_id, uri_id) VALUES (10, "dj8s763k"); #10
+INSERT INTO StepsUriIds (step_id, uri_id) VALUES (11, "a09d74j6"); #11
 
 /* Assign Steps to HowTo */
 INSERT INTO HowTosSteps (how_to_id, step_id, pos) VALUES (1, 1, 1);

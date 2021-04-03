@@ -35,6 +35,13 @@ CREATE TABLE Sub (
     FOREIGN KEY (step_id) REFERENCES Steps(id)
 );
 
+DROP TABLE IF EXISTS StepsUriIds;
+CREATE TABLE StepsUriIds (
+	step_id INT,
+    uri_id char(8),
+    FOREIGN KEY (step_id) REFERENCES Steps(id)
+);
+
 
 /* -- MAPPING + ORDERING ---------- */
 DROP TABLE IF EXISTS HowTosSteps;

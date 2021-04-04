@@ -15,14 +15,14 @@ namespace HowTosApi.Controllers
             this.Db = db;
         }
 
-        [HttpGet]//hwts/v1/howtos
+        [HttpGet]//hwts/v1/HowTos
         public IActionResult GetAllHowTos()
         {
             HowTosQuery htq = new HowTosQuery(Db);
             return Ok(htq.GetAll());
         }
 
-        [Route("{id}")] //hwts/v1/howtos/a9d8cd7a
+        [Route("{id}")] //hwts/v1/HowTos/a9d8cd7a
         [HttpGet]
         public IActionResult GetHowToById(string id)
         {

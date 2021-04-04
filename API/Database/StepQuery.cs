@@ -9,6 +9,34 @@ namespace HowTosApi.Controllers
     public class StepQuery
     {
         private AppDb Db;
+        private string GetAllQuery = @"
+            SELECT StepsUriIds.uri_id, Steps.title, Steps.ts_create, Steps.ts_update,
+            CASE
+                WHEN Steps.id IN (SELECT DISTINCT super_id FROM Super) THEN true ELSE false
+            END AS is_super
+            FROM Steps
+            JOIN StepsUriIds ON Steps.id=StepsUriIds.step_id;";
+        private string GetOneQuery = @"
+            SELECT StepsUriIds.uri_id, Steps.title, Steps.ts_create, Steps.ts_update,
+            CASE
+                WHEN Steps.id IN (SELECT DISTINCT super_id FROM Super) THEN true ELSE false
+            END AS is_super
+            FROM Steps
+            JOIN StepsUriIds ON Steps.id=StepsUriIds.step_id
+            WHERE uri_id=@uriId;";
+        private string GetStepsForHowToQuery = @"
+                SELECT HowTosSteps.pos, StepsUriIds.uri_id, Steps.title, Steps.ts_create, Steps.ts_update,
+                CASE
+                    WHEN Steps.id IN (SELECT DISTINCT super_id FROM Super) THEN true ELSE false
+                END AS is_super
+                FROM Steps
+                JOIN StepsUriIds ON StepsUriIds.step_id = Steps.id
+                JOIN HowTosSteps ON HowTosSteps.step_id = Steps.id
+                WHERE HowTosSteps.how_to_id = (
+                    SELECT how_to_id
+                    FROM HowTosUriIds
+                    WHERE uri_id=@uriId)
+                ORDER BY HowTosSteps.pos;";
 
         public StepQuery(AppDb db)
         {
@@ -18,29 +46,17 @@ namespace HowTosApi.Controllers
         public List<Step> GetAll()
         {
             MySqlCommand cmd = Db.Connection.CreateCommand();
-            cmd.CommandText = @"
-                SELECT StepsUriIds.uri_id, Steps.title, Steps.ts_create, Steps.ts_update,
-                CASE
-	                WHEN Steps.id IN (SELECT DISTINCT super_id FROM Super) THEN true ELSE false
-                END AS is_super
-                FROM Steps
-                JOIN StepsUriIds ON Steps.id=StepsUriIds.step_id;";
+            cmd.CommandText = GetAllQuery;
 
             List<Step> steps = QueryRead(cmd);
- 
+
             return steps;
         }
+
         public Step GetOne(string uriId)
         {
             MySqlCommand cmd = Db.Connection.CreateCommand();
-            cmd.CommandText = @"
-                SELECT StepsUriIds.uri_id, Steps.title, Steps.ts_create, Steps.ts_update,
-                CASE
-                    WHEN Steps.id IN (SELECT DISTINCT super_id FROM Super) THEN true ELSE false
-                END AS is_super
-                FROM Steps
-                JOIN StepsUriIds ON Steps.id=StepsUriIds.step_id
-                WHERE uri_id=@uriId;";
+            cmd.CommandText = GetOneQuery;
             cmd.Parameters.AddWithValue("@uriId", uriId);
 
             List<Step> steps = QueryRead(cmd);
@@ -77,30 +93,16 @@ namespace HowTosApi.Controllers
             }
             finally
             {
-            Db.Connection.Close();
+                Db.Connection.Close();
             }
-            
             return steps;
         }
 
         internal List<Step> GetStepsForHowTo(string uriId)
         {
             MySqlCommand cmd = Db.Connection.CreateCommand();
-            cmd.CommandText = @"
-                SELECT HowTosSteps.pos, StepsUriIds.uri_id, Steps.title, Steps.ts_create, Steps.ts_update,
-                CASE
-                    WHEN Steps.id IN (SELECT DISTINCT super_id FROM Super) THEN true ELSE false
-                END AS is_super
-                FROM Steps
-                JOIN StepsUriIds ON StepsUriIds.step_id = Steps.id
-                JOIN HowTosSteps ON HowTosSteps.step_id = Steps.id
-                WHERE HowTosSteps.how_to_id = (
-                    SELECT how_to_id
-                    FROM HowTosUriIds
-                    WHERE uri_id=@uriId)
-                ORDER BY HowTosSteps.pos;";
-
-                cmd.Parameters.AddWithValue("@uriId", uriId);
+            cmd.CommandText = GetStepsForHowToQuery;
+            cmd.Parameters.AddWithValue("@uriId", uriId);
 
             List<Step> steps = QueryRead(cmd);
 

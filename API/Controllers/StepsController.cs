@@ -15,14 +15,14 @@ namespace HowTosApi.Controllers
             this.Db = db;
         }
 
-        [HttpGet]//hwts/v1/steps
+        [HttpGet]//hwts/v1/Steps
         public IActionResult GetAllSteps()
         {
             StepQuery htq = new StepQuery(Db);
             return Ok(htq.GetAll());
         }
 
-        [Route("{id}")] //hwts/v1/steps/d874djd9
+        [Route("{id}")] //hwts/v1/Steps/d874djd9
         [HttpGet]
         public IActionResult GetStepById(string id)
         {

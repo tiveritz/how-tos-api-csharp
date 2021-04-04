@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
-using Microsoft.AspNetCore.Mvc;
 
 
 namespace HowTosApi.Controllers
@@ -9,6 +8,23 @@ namespace HowTosApi.Controllers
     public class HowToQuery
     {
         private AppDb Db;
+        private string GetOneQuery = @"
+            SELECT HowTosUriIds.uri_id, HowTos.title, HowTos.ts_create, HowTos.ts_update
+            FROM HowTos
+            JOIN HowTosUriIds ON HowTos.id=HowTosUriIds.how_to_id;";
+        private string GetStepsQuery = @"
+            SELECT HowTosSteps.pos, StepsUriIds.uri_id, Steps.title,
+            CASE
+                WHEN Steps.id IN (SELECT DISTINCT super_id FROM Super) THEN true ELSE false
+            END AS is_super
+            FROM Steps
+            JOIN StepsUriIds ON StepsUriIds.step_id = Steps.id
+            JOIN HowTosSteps ON HowTosSteps.step_id = Steps.id
+            WHERE HowTosSteps.how_to_id = (
+                SELECT how_to_id
+                FROM HowTosUriIds
+                WHERE uri_id=@uriId)
+            ORDER BY HowTosSteps.pos;";
 
         public HowToQuery(AppDb db)
         {
@@ -18,10 +34,7 @@ namespace HowTosApi.Controllers
         public HowTo GetOne(string uriId)
         {
             MySqlCommand cmd = Db.Connection.CreateCommand();
-            cmd.CommandText = @"
-                SELECT HowTosUriIds.uri_id, HowTos.title, HowTos.ts_create, HowTos.ts_update
-                FROM HowTos
-                JOIN HowTosUriIds ON HowTos.id=HowTosUriIds.how_to_id;";
+            cmd.CommandText = GetOneQuery;
 
             List<HowTo> howTos = QueryHowTo(cmd);
 
@@ -29,7 +42,7 @@ namespace HowTosApi.Controllers
             {
                 HowTo howTo = howTos[0];
                 howTo.Steps = GetSteps(uriId);
-            return howTo;
+                return howTo;
             }
             return null;
 
@@ -64,28 +77,15 @@ namespace HowTosApi.Controllers
             }
             finally
             {
-            Db.Connection.Close();
+                Db.Connection.Close();
             }
-            
             return howTos;
         }
 
         private List<HowToSteps> GetSteps(string uriId)
         {
             MySqlCommand cmd = Db.Connection.CreateCommand();
-            cmd.CommandText = @"
-                SELECT HowTosSteps.pos, StepsUriIds.uri_id, Steps.title,
-                CASE
-                    WHEN Steps.id IN (SELECT DISTINCT super_id FROM Super) THEN true ELSE false
-                END AS is_super
-                FROM Steps
-                JOIN StepsUriIds ON StepsUriIds.step_id = Steps.id
-                JOIN HowTosSteps ON HowTosSteps.step_id = Steps.id
-                WHERE HowTosSteps.how_to_id = (
-                    SELECT how_to_id
-                    FROM HowTosUriIds
-                    WHERE uri_id=@uriId)
-                ORDER BY HowTosSteps.pos;";
+            cmd.CommandText = GetStepsQuery;
             cmd.Parameters.AddWithValue("@uriId", uriId);
 
             List<HowToSteps> steps = QueryStep(cmd);
@@ -93,7 +93,7 @@ namespace HowTosApi.Controllers
             return steps;
         }
 
-            private List<HowToSteps> QueryStep(MySqlCommand cmd)
+        private List<HowToSteps> QueryStep(MySqlCommand cmd)
         {
             List<HowToSteps> steps = new List<HowToSteps>();
 
@@ -124,7 +124,6 @@ namespace HowTosApi.Controllers
             {
             Db.Connection.Close();
             }
-            
             return steps;
         }
     }

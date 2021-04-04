@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
-using Microsoft.AspNetCore.Mvc;
 
 
 namespace HowTosApi.Controllers
@@ -9,6 +8,15 @@ namespace HowTosApi.Controllers
     public class HowTosQuery
     {
         private AppDb Db;
+        private string GetAllQuery = @"
+            SELECT HowTosUriIds.uri_id, HowTos.title, HowTos.ts_create, HowTos.ts_update
+            FROM HowTos
+            JOIN HowTosUriIds ON HowTos.id=HowTosUriIds.how_to_id;";
+        private string GetOneQuery = @"
+            SELECT HowTosUriIds.uri_id, HowTos.title, HowTos.ts_create, HowTos.ts_update
+            FROM HowTos
+            JOIN HowTosUriIds ON HowTos.id=HowTosUriIds.how_to_id
+            WHERE uri_id=@uriId";
 
         public HowTosQuery(AppDb db)
         {
@@ -18,23 +26,17 @@ namespace HowTosApi.Controllers
         public List<HowTos> GetAll()
         {
             MySqlCommand cmd = Db.Connection.CreateCommand();
-            cmd.CommandText = @"
-                SELECT HowTosUriIds.uri_id, HowTos.title, HowTos.ts_create, HowTos.ts_update
-                FROM HowTos
-                JOIN HowTosUriIds ON HowTos.id=HowTosUriIds.how_to_id;";
+            cmd.CommandText = GetAllQuery;
 
             List<HowTos> howTos = QueryRead(cmd);
  
             return howTos;
         }
+
         public HowTos GetOne(string uriId)
         {
             MySqlCommand cmd = Db.Connection.CreateCommand();
-            cmd.CommandText = @"
-                SELECT HowTosUriIds.uri_id, HowTos.title, HowTos.ts_create, HowTos.ts_update
-                FROM HowTos
-                JOIN HowTosUriIds ON HowTos.id=HowTosUriIds.how_to_id
-                WHERE uri_id=@uriId";
+            cmd.CommandText = GetOneQuery;
             cmd.Parameters.AddWithValue("@uriId", uriId);
 
             List<HowTos> howTos = QueryRead(cmd);
@@ -72,7 +74,6 @@ namespace HowTosApi.Controllers
             {
             Db.Connection.Close();
             }
-            
             return howTos;
         }
     }

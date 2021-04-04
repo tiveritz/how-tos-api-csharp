@@ -1,13 +1,13 @@
 # How To's ![build-status](https://img.shields.io/docker/cloud/automated/tiveritz/how-tos-api) ![build-status](https://img.shields.io/docker/cloud/build/tiveritz/how-tos-api)
 This Project consists of a collection of Web Applications that allow you to manage, edit and view How To's in the form of Step-By-Step procedures. An important key aspect is the modularity of the documentation. Reusable steps, pictures, explanations, links and so on are a core concept and the database is designed with that in mind.
 
-#### Core API
+#### [Core API](https://github.com/tiveritz/how-tos-api)
 The REST API that handles all database interactions on the documentation database.
 
-#### Administration
+#### [Administration](https://github.com/tiveritz/how-tos-administration)
 A Website that allows users to manage the content. Consumes the Core API.
 
-#### Viewer
+#### [Viewer](https://github.com/tiveritz/how-tos-viewer)
 A Website that allows users to view the How To's. Consumes the Core API.
 
 # Core API
@@ -26,35 +26,27 @@ A Website that allows users to view the How To's. Consumes the Core API.
 
 | BASE                     | URL               | GET   | POST  | PUT   | PATCH | DELETE |
 | ------------------------ | ----------------- | :---: | :---: | :---: | :---: | :----: |
+| api.tiveritz.at/hwts/v1/ | statistics        |   ✓   |       |       |       |        |
 | api.tiveritz.at/hwts/v1/ | howtos            |   ✓   |   ✓   |       |       |        |
-| api.tiveritz.at/hwts/v1/ | howtos/count      |   ✓   |       |       |       |        |
 | api.tiveritz.at/hwts/v1/ | howtos/{id}       |   ✓   |       |       |   ✓   |   ✓    |
-| api.tiveritz.at/hwts/v1/ | howtos/{id}/steps |   ✓   |       |       |       |        |
 | api.tiveritz.at/hwts/v1/ | steps             |   ✓   |   ✓   |       |       |        |
-| api.tiveritz.at/hwts/v1/ | steps/count       |   ✓   |       |       |       |        |
 | api.tiveritz.at/hwts/v1/ | steps/{id}        |   ✓   |       |       |   ✓   |   ✓    |
+
+#### statistics
+GET statistical data about the available content<br/>
 
 #### howtos
 GET a list of all How To's<br/>
 POST a new How To
-
-#### howtos/count
-GET number of all available How To's<br/>
 
 #### howtos/{id}
 GET a specific How To<br/>
 PATCH (Update) information of a specific How To<br/>
 DELETE a specific How To
 
-#### howtos/{id}/steps
-GET all steps of a specific How To with info if it is a Substep or Superstep<br/>
-
 #### steps
 GET number of all available Steps with info if it is a Substep or Superstep<br/>
 POST a new Step
-
-#### steps/count
-GET number of all available Steps
 
 #### steps/{id}
 GET a specific step<br/>

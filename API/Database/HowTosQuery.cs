@@ -12,41 +12,54 @@ namespace HowTosApi.Controllers
             SELECT HowTosUriIds.uri_id, HowTos.title, HowTos.ts_create, HowTos.ts_update
             FROM HowTos
             JOIN HowTosUriIds ON HowTos.id=HowTosUriIds.how_to_id;";
-        private string GetOneQuery = @"
-            SELECT HowTosUriIds.uri_id, HowTos.title, HowTos.ts_create, HowTos.ts_update
-            FROM HowTos
-            JOIN HowTosUriIds ON HowTos.id=HowTosUriIds.how_to_id
-            WHERE uri_id=@uriId";
+        private string CreateQuery = @"
+            INSERT INTO HowTos (title)
+            VALUES (@title)";
+        private string MapUriId = @"
+            INSERT INTO HowTosUriIds (how_to_id, uri_id)
+            VALUES (@id, @uriId)";
 
         public HowTosQuery(AppDb db)
         {
             Db = db;
         }
 
-        public List<HowTos> GetAll()
+        public List<HowToListItem> GetAll()
         {
             MySqlCommand cmd = Db.Connection.CreateCommand();
             cmd.CommandText = GetAllQuery;
 
-            List<HowTos> howTos = QueryRead(cmd);
+            List<HowToListItem> howTos = QueryRead(cmd);
  
             return howTos;
         }
 
-        public HowTos GetOne(string uriId)
+        public string CreateHowTo(CreateHowTo createHowTo)
         {
-            MySqlCommand cmd = Db.Connection.CreateCommand();
-            cmd.CommandText = GetOneQuery;
-            cmd.Parameters.AddWithValue("@uriId", uriId);
+            // Writes new HowTo to db
+            MySqlCommand createHowToCmd = Db.Connection.CreateCommand();
+            createHowToCmd.CommandText = CreateQuery;
+            createHowToCmd.Parameters.AddWithValue("@title", createHowTo.Title);
 
-            List<HowTos> howTos = QueryRead(cmd);
+            int id = Db.ExecuteNoneQueryAndGetId(createHowToCmd);
+
+            // Generates a uriId
+            string uriId = UriIdGenerator.Generate(id);
+
+            // Map id to uriId
+            MySqlCommand createUidCmd = Db.Connection.CreateCommand();
+            createUidCmd.CommandText = MapUriId;
+            createUidCmd.Parameters.AddWithValue("@id", id);
+            createUidCmd.Parameters.AddWithValue("@uriId", uriId);
+
+            Db.ExecuteNonQuery(createUidCmd);
             
-            return howTos.Count > 0 ? howTos[0] : null;
+            return uriId;
         }
 
-        private List<HowTos> QueryRead(MySqlCommand cmd)
+        private List<HowToListItem> QueryRead(MySqlCommand cmd)
         {
-            List<HowTos> howTos = new List<HowTos>();
+            List<HowToListItem> howTos = new List<HowToListItem>();
 
             try
             {
@@ -55,7 +68,7 @@ namespace HowTosApi.Controllers
                 MySqlDataReader data = cmd.ExecuteReader();
 
                 while (data.Read()) {
-                    HowTos howTo = new HowTos()
+                    HowToListItem howTo = new HowToListItem()
                         {
                         Title = data.GetString(1),
                         Created = data.GetDateTime(2),

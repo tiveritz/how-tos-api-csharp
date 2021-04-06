@@ -22,6 +22,18 @@ namespace HowTosApi.Controllers
             return Ok(htq.GetAll());
         }
 
+        [HttpPost]
+        public IActionResult CreateHowTo([FromBody]CreateHowTo createHowTo)
+        {
+            HowTosQuery htq = new HowTosQuery(Db);
+            string uriId = htq.CreateHowTo(createHowTo);
+
+            HowToQuery newHtq = new HowToQuery(Db);
+            HowTo newHowTo = newHtq.GetOne(uriId);
+
+            return CreatedAtAction(nameof(GetHowToById), new { id = uriId }, newHowTo);
+        }
+
         [Route("{id}")] //hwts/v1/HowTos/a9d8cd7a
         [HttpGet]
         public IActionResult GetHowToById(string id)

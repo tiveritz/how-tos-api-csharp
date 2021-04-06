@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
-using Microsoft.AspNetCore.Mvc;
 
 
 namespace HowTosApi.Controllers
@@ -9,13 +8,6 @@ namespace HowTosApi.Controllers
     public class StepQuery
     {
         private AppDb Db;
-        private string GetAllQuery = @"
-            SELECT StepsUriIds.uri_id, Steps.title, Steps.ts_create, Steps.ts_update,
-            CASE
-                WHEN Steps.id IN (SELECT DISTINCT super_id FROM Super) THEN true ELSE false
-            END AS is_super
-            FROM Steps
-            JOIN StepsUriIds ON Steps.id=StepsUriIds.step_id;";
         private string GetOneQuery = @"
             SELECT StepsUriIds.uri_id, Steps.title, Steps.ts_create, Steps.ts_update,
             CASE
@@ -24,33 +16,23 @@ namespace HowTosApi.Controllers
             FROM Steps
             JOIN StepsUriIds ON Steps.id=StepsUriIds.step_id
             WHERE uri_id=@uriId;";
-        private string GetStepsForHowToQuery = @"
-                SELECT HowTosSteps.pos, StepsUriIds.uri_id, Steps.title, Steps.ts_create, Steps.ts_update,
-                CASE
-                    WHEN Steps.id IN (SELECT DISTINCT super_id FROM Super) THEN true ELSE false
-                END AS is_super
-                FROM Steps
-                JOIN StepsUriIds ON StepsUriIds.step_id = Steps.id
-                JOIN HowTosSteps ON HowTosSteps.step_id = Steps.id
-                WHERE HowTosSteps.how_to_id = (
-                    SELECT how_to_id
-                    FROM HowTosUriIds
-                    WHERE uri_id=@uriId)
-                ORDER BY HowTosSteps.pos;";
+        public string GetSubstepsQuery = @"
+            SELECT Super.pos, StepsUriIds.uri_id, Steps.title,
+            CASE
+                WHEN Steps.id IN (SELECT DISTINCT super_id FROM Super) THEN true ELSE false
+            END AS is_super
+            FROM Steps
+            JOIN StepsUriIds ON StepsUriIds.step_id = Steps.id
+            JOIN Super ON Super.step_id = Steps.id
+            WHERE Super.super_id = (
+                SELECT step_id
+                FROM StepsUriIds
+                WHERE uri_id=@uriId)
+            ORDER BY Super.pos";
 
         public StepQuery(AppDb db)
         {
             Db = db;
-        }
-
-        public List<Step> GetAll()
-        {
-            MySqlCommand cmd = Db.Connection.CreateCommand();
-            cmd.CommandText = GetAllQuery;
-
-            List<Step> steps = QueryRead(cmd);
-
-            return steps;
         }
 
         public Step GetOne(string uriId)
@@ -59,12 +41,29 @@ namespace HowTosApi.Controllers
             cmd.CommandText = GetOneQuery;
             cmd.Parameters.AddWithValue("@uriId", uriId);
 
-            List<Step> steps = QueryRead(cmd);
-            
-            return steps.Count > 0 ? steps[0] : null;
+            List<Step> steps = QuerySteps(cmd);
+
+            if (steps.Count > 0)
+            {
+                Step step = steps[0];
+                step.Steps = GetSubsteps(uriId);
+                return step;
+            }
+            return null;
         }
 
-        private List<Step> QueryRead(MySqlCommand cmd)
+        private List<SubstepListItem> GetSubsteps(string uriId)
+        {
+            MySqlCommand cmd = Db.Connection.CreateCommand();
+            cmd.CommandText = GetSubstepsQuery;
+            cmd.Parameters.AddWithValue("@uriId", uriId);
+
+            List<SubstepListItem> substeps = QuerySubsteps(cmd);
+
+            return substeps;
+        }
+
+        private List<Step> QuerySteps(MySqlCommand cmd)
         {
             List<Step> steps = new List<Step>();
 
@@ -75,14 +74,13 @@ namespace HowTosApi.Controllers
                 MySqlDataReader data = cmd.ExecuteReader();
 
                 while (data.Read()) {
+                    string uriId = data.GetString(0);
                     Step step = new Step()
                         {
                         Title = data.GetString(1),
-                        Created = data.GetDateTime(2),
-                        Updated = data.GetDateTime(3),
                         IsSuper = data.GetBoolean(4)
                         };
-                    step.SetId(data.GetString(0));
+                    step.SetId(uriId);
                     steps.Add(step);
                 }
             }
@@ -97,14 +95,37 @@ namespace HowTosApi.Controllers
             }
             return steps;
         }
-
-        internal List<Step> GetStepsForHowTo(string uriId)
+        private List<SubstepListItem> QuerySubsteps(MySqlCommand cmd)
         {
-            MySqlCommand cmd = Db.Connection.CreateCommand();
-            cmd.CommandText = GetStepsForHowToQuery;
-            cmd.Parameters.AddWithValue("@uriId", uriId);
+            List<SubstepListItem> steps = new List<SubstepListItem>();
 
-            List<Step> steps = QueryRead(cmd);
+            try
+            {
+                Db.Connection.Open();
+                cmd.Prepare();
+                MySqlDataReader data = cmd.ExecuteReader();
+
+                while (data.Read()) {
+                    string uriId = data.GetString(1);
+                    SubstepListItem substep = new SubstepListItem()
+                        {
+                        Pos = data.GetInt32(0),
+                        Title = data.GetString(2),
+                        IsSuper = data.GetBoolean(3)
+                        };
+                    substep.SetId(uriId);
+                    steps.Add(substep);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return null;
+            }
+            finally
+            {
+                Db.Connection.Close();
+            }
 
             return steps;
         }

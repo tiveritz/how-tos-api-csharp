@@ -18,16 +18,28 @@ namespace HowTosApi.Controllers
         [HttpGet]//hwts/v1/Steps
         public IActionResult GetAllSteps()
         {
-            StepQuery htq = new StepQuery(Db);
+            StepsQuery htq = new StepsQuery(Db);
             return Ok(htq.GetAll());
+        }
+        
+        [HttpPost]
+        public IActionResult CreateStep([FromBody]CreateStep createStep)
+        {
+            StepsQuery sq = new StepsQuery(Db);
+            string uriId = sq.CreateStep(createStep);
+
+            StepQuery newSq = new StepQuery(Db);
+            Step newStep = newSq.GetOne(uriId);
+
+            return CreatedAtAction(nameof(GetStepById), new { id = uriId }, newStep);
         }
 
         [Route("{id}")] //hwts/v1/Steps/d874djd9
         [HttpGet]
         public IActionResult GetStepById(string id)
         {
-            StepQuery htq = new StepQuery(Db);
-            return Ok(htq.GetOne(id));
+            StepQuery sq = new StepQuery(Db);
+            return Ok(sq.GetOne(id));
         }
     }
 }

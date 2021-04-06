@@ -91,12 +91,12 @@ FROM Steps
 JOIN StepsUriIds ON Steps.id=StepsUriIds.step_id
 WHERE uri_id="2ls98s7e";
 
-# Get step_id from uri_id
+# Get uri_id from step_id
 SELECT uri_id
 FROM StepsUriIds
 WHERE step_id=1;
 
-# Get uri_id from step_id
+# Get step from uri_id
 SELECT step_id
 FROM StepsUriIds
 WHERE uri_id="dj8d7f6e";
@@ -116,10 +116,17 @@ WHERE HowTosSteps.how_to_id = (
 ORDER BY HowTosSteps.pos;
 
 # List all SubSteps of a Step
-SELECT Super.pos, Steps.title, Steps.ts_create, Steps.ts_update
-FROM Super
-JOIN Steps ON Super.step_id = Steps.id
-WHERE Super.super_id = '2'
+SELECT Super.pos, StepsUriIds.uri_id, Steps.title,
+CASE
+	WHEN Steps.id IN (SELECT DISTINCT super_id FROM Super) THEN true ELSE false
+END AS is_super
+FROM Steps
+JOIN StepsUriIds ON StepsUriIds.step_id = Steps.id
+JOIN Super ON Super.step_id = Steps.id
+WHERE Super.super_id = (
+	SELECT step_id
+	FROM StepsUriIds
+	WHERE uri_id="djc847dj")
 ORDER BY Super.pos;
 
 # Show the explanation of a specific step

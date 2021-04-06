@@ -11,7 +11,8 @@ namespace HowTosApi.Controllers
         private string GetOneQuery = @"
             SELECT HowTosUriIds.uri_id, HowTos.title, HowTos.ts_create, HowTos.ts_update
             FROM HowTos
-            JOIN HowTosUriIds ON HowTos.id=HowTosUriIds.how_to_id;";
+            JOIN HowTosUriIds ON HowTos.id=HowTosUriIds.how_to_id
+            WHERE uri_id=@uriId";
         private string GetStepsQuery = @"
             SELECT HowTosSteps.pos, StepsUriIds.uri_id, Steps.title,
             CASE
@@ -35,6 +36,7 @@ namespace HowTosApi.Controllers
         {
             MySqlCommand cmd = Db.Connection.CreateCommand();
             cmd.CommandText = GetOneQuery;
+            cmd.Parameters.AddWithValue("@uriId", uriId);
 
             List<HowTo> howTos = QueryHowTo(cmd);
 
@@ -62,9 +64,7 @@ namespace HowTosApi.Controllers
                     string uriId = data.GetString(0);
                     HowTo howTo = new HowTo()
                         {
-                        Title = data.GetString(1),
-                        Created = data.GetDateTime(2),
-                        Updated = data.GetDateTime(3)
+                        Title = data.GetString(1)
                         };
                     howTo.SetId(uriId);
                     howTos.Add(howTo);

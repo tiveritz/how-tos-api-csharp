@@ -82,20 +82,20 @@ namespace HowTosApi.Controllers
             return howTos;
         }
 
-        private List<HowToSteps> GetSteps(string uriId)
+        private List<HowToStepsOrderItem> GetSteps(string uriId)
         {
             MySqlCommand cmd = Db.Connection.CreateCommand();
             cmd.CommandText = GetStepsQuery;
             cmd.Parameters.AddWithValue("@uriId", uriId);
 
-            List<HowToSteps> steps = QueryStep(cmd);
+            List<HowToStepsOrderItem> steps = QueryStep(cmd);
 
             return steps;
         }
 
-        private List<HowToSteps> QueryStep(MySqlCommand cmd)
+        private List<HowToStepsOrderItem> QueryStep(MySqlCommand cmd)
         {
-            List<HowToSteps> steps = new List<HowToSteps>();
+            List<HowToStepsOrderItem> steps = new List<HowToStepsOrderItem>();
 
             try
             {
@@ -105,7 +105,7 @@ namespace HowTosApi.Controllers
 
                 while (data.Read()) {
                     string uriId = data.GetString(0);
-                    HowToSteps step = new HowToSteps()
+                    HowToStepsOrderItem step = new HowToStepsOrderItem()
                         {
                         Pos = data.GetInt32(0),
                         Title = data.GetString(2),

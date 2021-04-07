@@ -52,13 +52,13 @@ namespace HowTosApi.Controllers
             return null;
         }
 
-        private List<SubstepListItem> GetSubsteps(string uriId)
+        private List<StepSubstepsOrderItem> GetSubsteps(string uriId)
         {
             MySqlCommand cmd = Db.Connection.CreateCommand();
             cmd.CommandText = GetSubstepsQuery;
             cmd.Parameters.AddWithValue("@uriId", uriId);
 
-            List<SubstepListItem> substeps = QuerySubsteps(cmd);
+            List<StepSubstepsOrderItem> substeps = QuerySubsteps(cmd);
 
             return substeps;
         }
@@ -95,9 +95,9 @@ namespace HowTosApi.Controllers
             }
             return steps;
         }
-        private List<SubstepListItem> QuerySubsteps(MySqlCommand cmd)
+        private List<StepSubstepsOrderItem> QuerySubsteps(MySqlCommand cmd)
         {
-            List<SubstepListItem> steps = new List<SubstepListItem>();
+            List<StepSubstepsOrderItem> steps = new List<StepSubstepsOrderItem>();
 
             try
             {
@@ -107,7 +107,7 @@ namespace HowTosApi.Controllers
 
                 while (data.Read()) {
                     string uriId = data.GetString(1);
-                    SubstepListItem substep = new SubstepListItem()
+                    StepSubstepsOrderItem substep = new StepSubstepsOrderItem()
                         {
                         Pos = data.GetInt32(0),
                         Title = data.GetString(2),

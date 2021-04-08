@@ -29,7 +29,7 @@ namespace HowTosApi.Controllers
             string uriId = htq.CreateHowTo(createHowTo);
 
             HowToQuery newHtq = new HowToQuery(Db);
-            HowTo newHowTo = newHtq.GetOne(uriId);
+            HowTo newHowTo = newHtq.GetHowToById(uriId);
 
             return CreatedAtAction(nameof(GetHowToById), new { id = uriId }, newHowTo);
         }
@@ -39,7 +39,7 @@ namespace HowTosApi.Controllers
         public IActionResult GetHowToById(string id)
         {
             HowToQuery htq = new HowToQuery(Db);
-            return Ok(htq.GetOne(id));
+            return Ok(htq.GetHowToById(id));
         }
     }
 }

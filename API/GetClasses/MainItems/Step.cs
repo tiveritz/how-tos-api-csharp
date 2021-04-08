@@ -12,7 +12,7 @@ namespace HowTosApi
         public DateTime Created { get; set; }
         public DateTime Updated { get; set; }
         public bool IsSuper { get; set; }
-        public List<StepSubstepsOrderItem> Steps { get; set; }
+        public List<StepsOrderItem> Steps { get; set; }
 
         public void SetId(string Id)
         {

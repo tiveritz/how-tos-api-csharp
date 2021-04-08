@@ -9,7 +9,7 @@ namespace HowTosApi
         public string Id { get; private set; }
         public string Link {get; private set; }
         public string Title { get; set; }
-        public List<HowToStepsOrderItem> Steps { get; set; }
+        public List<StepsOrderItem> Steps { get; set; }
 
         public void SetId(string Id)
         {

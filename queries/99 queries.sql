@@ -102,7 +102,7 @@ FROM StepsUriIds
 WHERE uri_id="dj8d7f6e";
 
 # List all Steps of a specific How To by uri_id, order by position
-SELECT HowTosSteps.pos, StepsUriIds.uri_id, Steps.title,
+SELECT StepsUriIds.uri_id, Steps.title,
 CASE
 	WHEN Steps.id IN (SELECT DISTINCT super_id FROM Super) THEN true ELSE false
 END AS is_super
@@ -116,7 +116,7 @@ WHERE HowTosSteps.how_to_id = (
 ORDER BY HowTosSteps.pos;
 
 # List all SubSteps of a Step
-SELECT Super.pos, StepsUriIds.uri_id, Steps.title,
+SELECT StepsUriIds.uri_id, Steps.title,
 CASE
 	WHEN Steps.id IN (SELECT DISTINCT super_id FROM Super) THEN true ELSE false
 END AS is_super

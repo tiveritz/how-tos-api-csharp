@@ -8,7 +8,7 @@ namespace HowTosApi.Controllers
     public class StepQuery
     {
         private AppDb Db;
-        private string GetOneQuery = @"
+        private string GetStepByIdQuery = @"
             SELECT StepsUriIds.uri_id, Steps.title, Steps.ts_create, Steps.ts_update,
             CASE
                 WHEN Steps.id IN (SELECT DISTINCT super_id FROM Super) THEN true ELSE false
@@ -17,7 +17,7 @@ namespace HowTosApi.Controllers
             JOIN StepsUriIds ON Steps.id=StepsUriIds.step_id
             WHERE uri_id=@uriId;";
         public string GetSubstepsQuery = @"
-            SELECT Super.pos, StepsUriIds.uri_id, Steps.title,
+            SELECT StepsUriIds.uri_id, Steps.title,
             CASE
                 WHEN Steps.id IN (SELECT DISTINCT super_id FROM Super) THEN true ELSE false
             END AS is_super
@@ -35,13 +35,13 @@ namespace HowTosApi.Controllers
             Db = db;
         }
 
-        public Step GetOne(string uriId)
+        public Step GetStepById(string uriId)
         {
             MySqlCommand cmd = Db.Connection.CreateCommand();
-            cmd.CommandText = GetOneQuery;
+            cmd.CommandText = GetStepByIdQuery;
             cmd.Parameters.AddWithValue("@uriId", uriId);
 
-            List<Step> steps = QuerySteps(cmd);
+            List<Step> steps = QueryStep(cmd);
 
             if (steps.Count > 0)
             {
@@ -52,18 +52,7 @@ namespace HowTosApi.Controllers
             return null;
         }
 
-        private List<StepSubstepsOrderItem> GetSubsteps(string uriId)
-        {
-            MySqlCommand cmd = Db.Connection.CreateCommand();
-            cmd.CommandText = GetSubstepsQuery;
-            cmd.Parameters.AddWithValue("@uriId", uriId);
-
-            List<StepSubstepsOrderItem> substeps = QuerySubsteps(cmd);
-
-            return substeps;
-        }
-
-        private List<Step> QuerySteps(MySqlCommand cmd)
+        private List<Step> QueryStep(MySqlCommand cmd)
         {
             List<Step> steps = new List<Step>();
 
@@ -95,9 +84,26 @@ namespace HowTosApi.Controllers
             }
             return steps;
         }
-        private List<StepSubstepsOrderItem> QuerySubsteps(MySqlCommand cmd)
+
+        private List<StepsOrderItem> GetSubsteps(string uriId)
         {
-            List<StepSubstepsOrderItem> steps = new List<StepSubstepsOrderItem>();
+            MySqlCommand cmd = Db.Connection.CreateCommand();
+            cmd.CommandText = GetSubstepsQuery;
+            cmd.Parameters.AddWithValue("@uriId", uriId);
+
+            List<StepsOrderItem> steps = QuerySubsteps(cmd);
+
+            foreach (StepsOrderItem step in steps)
+            {
+                CreateSubstepTree(step);
+            }
+
+            return steps;
+        }
+
+        private List<StepsOrderItem> QuerySubsteps(MySqlCommand cmd)
+        {
+            List<StepsOrderItem> steps = new List<StepsOrderItem>();
 
             try
             {
@@ -106,14 +112,12 @@ namespace HowTosApi.Controllers
                 MySqlDataReader data = cmd.ExecuteReader();
 
                 while (data.Read()) {
-                    string uriId = data.GetString(1);
-                    StepSubstepsOrderItem substep = new StepSubstepsOrderItem()
+                    StepsOrderItem substep = new StepsOrderItem()
                         {
-                        Pos = data.GetInt32(0),
-                        Title = data.GetString(2),
-                        IsSuper = data.GetBoolean(3)
+                        Title = data.GetString(1),
+                        IsSuper = data.GetBoolean(2)
                         };
-                    substep.SetId(uriId);
+                    substep.SetId(data.GetString(0));
                     steps.Add(substep);
                 }
             }
@@ -128,6 +132,27 @@ namespace HowTosApi.Controllers
             }
 
             return steps;
+        }
+
+        // Recursively create the substep tree
+        private StepsOrderItem CreateSubstepTree(StepsOrderItem superstep)
+        {
+            MySqlCommand cmd = Db.Connection.CreateCommand();
+            cmd.CommandText = GetSubstepsQuery;
+            cmd.Parameters.AddWithValue("@uriId", superstep.Id);
+            
+            superstep.Substeps = QuerySubsteps(cmd);
+
+            if (superstep.Substeps == null)
+            {
+                return superstep;
+            }
+
+            foreach (StepsOrderItem substep in superstep.Substeps)
+            {
+                StepsOrderItem htoi = CreateSubstepTree(substep);
+            }
+            return superstep;
         }
     }
 }

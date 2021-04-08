@@ -29,7 +29,7 @@ namespace HowTosApi.Controllers
             string uriId = sq.CreateStep(createStep);
 
             StepQuery newSq = new StepQuery(Db);
-            Step newStep = newSq.GetOne(uriId);
+            Step newStep = newSq.GetStepById(uriId);
 
             return CreatedAtAction(nameof(GetStepById), new { id = uriId }, newStep);
         }
@@ -39,7 +39,7 @@ namespace HowTosApi.Controllers
         public IActionResult GetStepById(string id)
         {
             StepQuery sq = new StepQuery(Db);
-            return Ok(sq.GetOne(id));
+            return Ok(sq.GetStepById(id));
         }
     }
 }

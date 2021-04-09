@@ -15,11 +15,19 @@ namespace HowTosApi.Controllers
             this.Db = db;
         }
 
-        [HttpGet]//hwts/v1/HowTos
+        [HttpGet]
         public IActionResult GetAllHowTos()
         {
             HowTosQuery htq = new HowTosQuery(Db);
             return Ok(htq.GetAll());
+        }
+
+        [Route("{id}")]
+        [HttpGet]
+        public IActionResult GetHowToById(string id)
+        {
+            HowToQuery htq = new HowToQuery(Db);
+            return Ok(htq.GetHowToById(id));
         }
 
         [HttpPost]
@@ -32,14 +40,6 @@ namespace HowTosApi.Controllers
             HowTo newHowTo = newHtq.GetHowToById(uriId);
 
             return CreatedAtAction(nameof(GetHowToById), new { id = uriId }, newHowTo);
-        }
-
-        [Route("{id}")] //hwts/v1/HowTos/a9d8cd7a
-        [HttpGet]
-        public IActionResult GetHowToById(string id)
-        {
-            HowToQuery htq = new HowToQuery(Db);
-            return Ok(htq.GetHowToById(id));
         }
     }
 }

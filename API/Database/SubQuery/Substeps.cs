@@ -5,17 +5,9 @@ using MySql.Data.MySqlClient;
 
 namespace HowTosApi.Controllers
 {
-    public class StepQuery
+    public class Substeps
     {
         private AppDb Db;
-        private string GetStepByIdQuery = @"
-            SELECT StepsUriIds.uri_id, Steps.title, Steps.ts_create, Steps.ts_update,
-            CASE
-                WHEN Steps.id IN (SELECT DISTINCT super_id FROM Super) THEN true ELSE false
-            END AS is_super
-            FROM Steps
-            JOIN StepsUriIds ON Steps.id=StepsUriIds.step_id
-            WHERE uri_id=@uriId;";
         public string GetSubstepsQuery = @"
             SELECT StepsUriIds.uri_id, Steps.title,
             CASE
@@ -30,62 +22,12 @@ namespace HowTosApi.Controllers
                 WHERE uri_id=@uriId)
             ORDER BY Super.pos";
 
-        public StepQuery(AppDb db)
+        public Substeps(AppDb db)
         {
             Db = db;
         }
 
-        public Step GetStepById(string uriId)
-        {
-            MySqlCommand cmd = Db.Connection.CreateCommand();
-            cmd.CommandText = GetStepByIdQuery;
-            cmd.Parameters.AddWithValue("@uriId", uriId);
-
-            List<Step> steps = QueryStep(cmd);
-
-            if (steps.Count > 0)
-            {
-                Step step = steps[0];
-                step.Steps = GetSubsteps(uriId);
-                return step;
-            }
-            return null;
-        }
-
-        private List<Step> QueryStep(MySqlCommand cmd)
-        {
-            List<Step> steps = new List<Step>();
-
-            try
-            {
-                Db.Connection.Open();
-                cmd.Prepare();
-                MySqlDataReader data = cmd.ExecuteReader();
-
-                while (data.Read()) {
-                    string uriId = data.GetString(0);
-                    Step step = new Step()
-                        {
-                        Title = data.GetString(1),
-                        IsSuper = data.GetBoolean(4)
-                        };
-                    step.SetId(uriId);
-                    steps.Add(step);
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-                return null;
-            }
-            finally
-            {
-                Db.Connection.Close();
-            }
-            return steps;
-        }
-
-        private List<StepsOrderItem> GetSubsteps(string uriId)
+        public List<StepsOrderItem> GetSubsteps(string uriId)
         {
             MySqlCommand cmd = Db.Connection.CreateCommand();
             cmd.CommandText = GetSubstepsQuery;
@@ -101,7 +43,7 @@ namespace HowTosApi.Controllers
             return steps;
         }
 
-        private List<StepsOrderItem> QuerySubsteps(MySqlCommand cmd)
+        public List<StepsOrderItem> QuerySubsteps(MySqlCommand cmd)
         {
             List<StepsOrderItem> steps = new List<StepsOrderItem>();
 
@@ -135,7 +77,7 @@ namespace HowTosApi.Controllers
         }
 
         // Recursively create the substep tree
-        private StepsOrderItem CreateSubstepTree(StepsOrderItem superstep)
+        public StepsOrderItem CreateSubstepTree(StepsOrderItem superstep)
         {
             MySqlCommand cmd = Db.Connection.CreateCommand();
             cmd.CommandText = GetSubstepsQuery;

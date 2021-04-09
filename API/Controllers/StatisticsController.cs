@@ -15,7 +15,7 @@ namespace HowTosApi.Controllers
             this.Db = db;
         }
 
-        [HttpGet]//hwts/v1/Statistics
+        [HttpGet]
         public IActionResult GetStatistics()
         {
             StatisticsQuery htq = new StatisticsQuery(Db);

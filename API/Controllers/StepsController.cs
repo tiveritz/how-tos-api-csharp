@@ -15,7 +15,7 @@ namespace HowTosApi.Controllers
             this.Db = db;
         }
 
-        [HttpGet]//hwts/v1/Steps
+        [HttpGet]
         public IActionResult GetAllSteps()
         {
             StepsQuery htq = new StepsQuery(Db);
@@ -34,7 +34,7 @@ namespace HowTosApi.Controllers
             return CreatedAtAction(nameof(GetStepById), new { id = uriId }, newStep);
         }
 
-        [Route("{id}")] //hwts/v1/Steps/d874djd9
+        [Route("{id}")]
         [HttpGet]
         public IActionResult GetStepById(string id)
         {

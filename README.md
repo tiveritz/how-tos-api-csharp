@@ -55,13 +55,16 @@ PATCH (Update) information of a specific Step<br/>
 DELETE a specific step
 
 ## Web Applications Diagram
-![](docs/howtos_server.png?raw=true "How To's server diagram")
+![](./docs/server.png?raw=true "How To's server diagram")
 
 ## Continuous Integration Diagram
-![](docs/howtos_ci.png?raw=true "How To's CI diagram")
+![](./docs/ci.png?raw=true "How To's CI diagram")
 
 ## UML
-![](docs/howtos_uml.png?raw=true "How To's UML")
+![](./docs/uml.png?raw=true "How To's UML")
+
+## Database Model
+![](./docs/db_model.png?raw=true "How To's Database Model")
 
 ## Documentation Core Features
 Depending on the complexity and time of the project various features can be implemented. Sorted by priority descending.

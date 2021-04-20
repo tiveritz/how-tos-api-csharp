@@ -41,5 +41,22 @@ namespace HowTosApi.Controllers
             StepQuery sq = new StepQuery(Db);
             return Ok(sq.GetStepById(id));
         }
+
+        [Route("{id}")]
+        [HttpDelete]
+        public IActionResult DeleteStepById(string id)
+        {
+            StepQuery sq = new StepQuery(Db);
+            Step s = sq.GetStepById(id);
+            
+            if (s == null)
+            {
+                return NotFound();
+            }
+
+            sq.DeleteStep(id);
+
+            return NoContent();
+        }
     }
 }

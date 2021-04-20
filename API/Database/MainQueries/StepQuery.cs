@@ -16,6 +16,15 @@ namespace HowTosApi.Controllers
             FROM Steps
             JOIN StepsUriIds ON Steps.id=StepsUriIds.step_id
             WHERE uri_id=@uriId;";
+        private string DeleteStepQuery = @"
+            DELETE FROM StepsUriIds
+            WHERE uri_id=@uriId;";
+        private string GetSuperQuery = @"
+            SELECT Steps.title
+            FROM Super
+            JOIN Steps ON Super.super_id = Steps.id
+            WHERE step_id = 4;
+        ";
 
         public StepQuery(AppDb db)
         {
@@ -38,6 +47,15 @@ namespace HowTosApi.Controllers
                 return step;
             }
             return null;
+        }
+
+        public void DeleteStep(string uriId)
+        {
+            MySqlCommand cmd = Db.Connection.CreateCommand();
+            cmd.CommandText = DeleteStepQuery;
+            cmd.Parameters.AddWithValue("@uriId", uriId);
+
+            Db.ExecuteNonQuery(cmd);
         }
 
         private List<Step> QueryStep(MySqlCommand cmd)

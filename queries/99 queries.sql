@@ -70,6 +70,10 @@ SELECT how_to_id
 FROM HowTosUriIds
 WHERE uri_id="a9d8cd7a";
 
+# Delete How To
+DELETE FROM HowTosUriIds
+WHERE uri_id="a9d8cd7a";
+
 
 # -----------------------------------------------------------------------------
 #    4. Steps Queries
@@ -134,20 +138,41 @@ SELECT explanation
 FROM Sub
 WHERE step_id = '1';
 
+# Delete Step
+DELETE FROM StepsUriIds
+WHERE uri_id="dj8d7f6e";
+
+
 # -----------------------------------------------------------------------------
 #    5. Data Integrity Queries
 # -----------------------------------------------------------------------------
 # Display the How Tos, where the step is linked
-SELECT HowTos.title
-FROM HowTosSteps
-JOIN HowTos ON HowTosSteps.how_to_id = HowTos.id
-WHERE step_id = 1;
+SELECT HowTosUriIds.uri_id, HowTos.title
+FROM HowTos
+JOIN HowTosUriIds ON HowTos.id=HowTosUriIds.how_to_id
+WHERE HowTos.id IN (
+	SELECT how_to_id
+    FROM HowTosSteps
+    WHERE step_id = (
+		SELECT step_id
+		FROM StepsUriIds
+		WHERE uri_id="a93jdjc7"
+    )
+);
 
 # Check if a Step is linked to a Super
-SELECT Steps.title
-FROM Super
-JOIN Steps ON Super.super_id = Steps.id
-WHERE step_id = 4;
+SELECT StepsUriIds.uri_id, Steps.title
+FROM Steps
+JOIN StepsUriIds ON Steps.id=StepsUriIds.step_id
+WHERE uri_id IN (
+	SELECT super_id
+    FROM Super
+    WHERE step_id IN (
+		SELECT step_id
+        FROM StepsUriIds
+        WHERE uri_id = "2ls98s7e"
+    )
+);
 
 
 # -----------------------------------------------------------------------------

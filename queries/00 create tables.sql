@@ -54,15 +54,15 @@ CREATE TABLE Sub (
 DROP TABLE IF EXISTS HowTosUriIds;
 CREATE TABLE HowTosUriIds (
 	how_to_id INT,
-    uri_id char(8),
-    FOREIGN KEY (how_to_id) REFERENCES HowTos(id)
+    uri_id char(8) PRIMARY KEY,
+    FOREIGN KEY (how_to_id) REFERENCES HowTos(id) ON DELETE CASCADE  
 );
 
 DROP TABLE IF EXISTS StepsUriIds;
 CREATE TABLE StepsUriIds (
 	step_id INT,
-    uri_id char(8),
-    FOREIGN KEY (step_id) REFERENCES Steps(id)
+    uri_id char(8) PRIMARY KEY,
+    FOREIGN KEY (step_id) REFERENCES Steps(id) ON DELETE CASCADE  
 );
 
 

@@ -26,6 +26,10 @@ namespace HowTosApi.Controllers
                 FROM HowTosUriIds
                 WHERE uri_id=@uriId)
             ORDER BY HowTosSteps.pos;";
+        private string DeleteHowToQuery = @"
+            DELETE FROM HowTosUriIds
+            WHERE uri_id=@uriId;
+        ";
 
         public HowToQuery(AppDb db)
         {
@@ -48,6 +52,15 @@ namespace HowTosApi.Controllers
             }
             return null;
 
+        }
+
+        public void DeleteHowTo(string uriId)
+        {
+            MySqlCommand cmd = Db.Connection.CreateCommand();
+            cmd.CommandText = DeleteHowToQuery;
+            cmd.Parameters.AddWithValue("@uriId", uriId);
+
+            Db.ExecuteNonQuery(cmd);
         }
 
         private List<HowTo> QueryHowTo(MySqlCommand cmd)

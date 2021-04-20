@@ -29,6 +29,23 @@ namespace HowTosApi.Controllers
             HowToQuery htq = new HowToQuery(Db);
             return Ok(htq.GetHowToById(id));
         }
+    
+        [Route("{id}")]
+        [HttpDelete]
+        public IActionResult DeleteHowToById(string id)
+        {
+            HowToQuery htq = new HowToQuery(Db);
+            HowTo ht = htq.GetHowToById(id);
+            
+            if (ht == null)
+            {
+                return NotFound();
+            }
+
+            htq.DeleteHowTo(id);
+
+            return NoContent();
+        }
 
         [HttpPost]
         public IActionResult CreateHowTo([FromBody]CreateHowTo createHowTo)

@@ -28,8 +28,15 @@ namespace HowTosApi.Controllers
             ORDER BY HowTosSteps.pos;";
         private string DeleteHowToQuery = @"
             DELETE FROM HowTosUriIds
-            WHERE uri_id=@uriId;
-        ";
+            WHERE uri_id=@uriId;";
+        private string ChangeHowToTitleQuery = @"
+            UPDATE HowTos
+            SET title = @title
+            WHERE id = (
+                SELECT how_to_id
+                FROM HowTosUriIds
+                WHERE uri_id=@uriId
+            );";
 
         public HowToQuery(AppDb db)
         {
@@ -59,6 +66,16 @@ namespace HowTosApi.Controllers
             MySqlCommand cmd = Db.Connection.CreateCommand();
             cmd.CommandText = DeleteHowToQuery;
             cmd.Parameters.AddWithValue("@uriId", uriId);
+
+            Db.ExecuteNonQuery(cmd);
+        }
+
+        public void ChangeHowTo(string uriId, ChangeHowTo changeHowTo)
+        {
+            MySqlCommand cmd = Db.Connection.CreateCommand();
+            cmd.CommandText = ChangeHowToTitleQuery;
+            cmd.Parameters.AddWithValue("@uriId", uriId);
+            cmd.Parameters.AddWithValue("@title", changeHowTo.Title);
 
             Db.ExecuteNonQuery(cmd);
         }

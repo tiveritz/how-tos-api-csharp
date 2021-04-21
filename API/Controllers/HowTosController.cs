@@ -22,12 +22,41 @@ namespace HowTosApi.Controllers
             return Ok(htq.GetAll());
         }
 
+        [HttpPost]
+        public IActionResult CreateHowTo([FromBody]CreateHowTo createHowTo)
+        {
+            HowTosQuery htq = new HowTosQuery(Db);
+            string uriId = htq.CreateHowTo(createHowTo);
+
+            HowToQuery newHtq = new HowToQuery(Db);
+            HowTo newHowTo = newHtq.GetHowToById(uriId);
+
+            return CreatedAtAction(nameof(GetHowToById), new { id = uriId }, newHowTo);
+        }
+
         [Route("{id}")]
         [HttpGet]
         public IActionResult GetHowToById(string id)
         {
             HowToQuery htq = new HowToQuery(Db);
             return Ok(htq.GetHowToById(id));
+        }
+
+        [Route("{id}")]
+        [HttpPatch]
+        public IActionResult ChangeHowTo(string id, [FromBody]ChangeHowTo changeHowTo)
+        {
+            HowToQuery htq = new HowToQuery(Db);
+            HowTo ht = htq.GetHowToById(id);
+            
+            if (ht == null)
+            {
+                return NotFound();
+            }
+
+            htq.ChangeHowTo(id, changeHowTo);
+
+            return Ok();
         }
     
         [Route("{id}")]
@@ -45,18 +74,6 @@ namespace HowTosApi.Controllers
             htq.DeleteHowTo(id);
 
             return NoContent();
-        }
-
-        [HttpPost]
-        public IActionResult CreateHowTo([FromBody]CreateHowTo createHowTo)
-        {
-            HowTosQuery htq = new HowTosQuery(Db);
-            string uriId = htq.CreateHowTo(createHowTo);
-
-            HowToQuery newHtq = new HowToQuery(Db);
-            HowTo newHowTo = newHtq.GetHowToById(uriId);
-
-            return CreatedAtAction(nameof(GetHowToById), new { id = uriId }, newHowTo);
         }
     }
 }

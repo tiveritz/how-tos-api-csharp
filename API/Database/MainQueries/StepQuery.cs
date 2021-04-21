@@ -23,8 +23,15 @@ namespace HowTosApi.Controllers
             SELECT Steps.title
             FROM Super
             JOIN Steps ON Super.super_id = Steps.id
-            WHERE step_id = 4;
-        ";
+            WHERE step_id = 4;";
+        private string ChangeStepQuery = @"
+            UPDATE Steps
+            SET title = @title
+            WHERE id = (
+                SELECT step_id
+                FROM StepsUriIds
+                WHERE uri_id=@uriId
+            );";
 
         public StepQuery(AppDb db)
         {
@@ -54,6 +61,16 @@ namespace HowTosApi.Controllers
             MySqlCommand cmd = Db.Connection.CreateCommand();
             cmd.CommandText = DeleteStepQuery;
             cmd.Parameters.AddWithValue("@uriId", uriId);
+
+            Db.ExecuteNonQuery(cmd);
+        }
+
+        public void ChangeStep(string uriId, ChangeStep changeStep)
+        {
+            MySqlCommand cmd = Db.Connection.CreateCommand();
+            cmd.CommandText = ChangeStepQuery;
+            cmd.Parameters.AddWithValue("@uriId", uriId);
+            cmd.Parameters.AddWithValue("@title", changeStep.Title);
 
             Db.ExecuteNonQuery(cmd);
         }

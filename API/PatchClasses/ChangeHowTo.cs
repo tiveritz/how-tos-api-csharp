@@ -3,7 +3,7 @@ using System;
 
 namespace HowTosApi
 {
-    public class ChangeHowToTitle
+    public class ChangeHowTo
     {
         public string Title { get; set; }
     }

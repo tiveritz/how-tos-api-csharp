@@ -43,6 +43,23 @@ namespace HowTosApi.Controllers
         }
 
         [Route("{id}")]
+        [HttpPatch]
+        public IActionResult ChangeStep(string id, [FromBody]ChangeStep changeStep)
+        {
+            StepQuery sq = new StepQuery(Db);
+            Step s = sq.GetStepById(id);
+            
+            if (s == null)
+            {
+                return NotFound();
+            }
+
+            sq.ChangeStep(id, changeStep);
+
+            return Ok();
+        }
+
+        [Route("{id}")]
         [HttpDelete]
         public IActionResult DeleteStepById(string id)
         {

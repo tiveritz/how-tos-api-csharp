@@ -74,6 +74,15 @@ WHERE uri_id="a9d8cd7a";
 DELETE FROM HowTosUriIds
 WHERE uri_id="a9d8cd7a";
 
+# Change How To name
+UPDATE HowTos
+SET title = "changed title"
+WHERE id = (
+	SELECT how_to_id
+	FROM HowTosUriIds
+	WHERE uri_id="a9d8cd7a"
+);
+
 
 # -----------------------------------------------------------------------------
 #    4. Steps Queries
@@ -142,6 +151,14 @@ WHERE step_id = '1';
 DELETE FROM StepsUriIds
 WHERE uri_id="dj8d7f6e";
 
+# Change Step name
+UPDATE Steps
+SET title = "changed title"
+WHERE id = (
+	SELECT step_id
+	FROM StepsUriIds
+	WHERE uri_id="dj8d7f6e"
+);
 
 # -----------------------------------------------------------------------------
 #    5. Data Integrity Queries

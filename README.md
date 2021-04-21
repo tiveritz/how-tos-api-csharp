@@ -1,15 +1,12 @@
 # How To's ![build-status](https://img.shields.io/docker/cloud/automated/tiveritz/how-tos-api) ![build-status](https://img.shields.io/docker/cloud/build/tiveritz/how-tos-api)
 This Project consists of a collection of Web Applications that allow you to manage, edit and view How To's in the form of Step-By-Step procedures. An important key aspect is the modularity of the documentation. Reusable steps, pictures, explanations, links and so on are a core concept and the database is designed with that in mind.
+
+### [Core API](https://github.com/tiveritz/how-tos-api)
+The REST API that handles all database interactions on the documentation database.<br>
 [Swagger API documentation](https://api.tiveritz.at)
 
-#### [Core API](https://github.com/tiveritz/how-tos-api)
-The REST API that handles all database interactions on the documentation database.
-
-#### [Administration](https://github.com/tiveritz/how-tos-administration)
-A Website that allows users to manage the content. Consumes the Core API.
-
-#### [Viewer](https://github.com/tiveritz/how-tos-viewer)
-A Website that allows users to view the How To's. Consumes the Core API.
+### [Webapps](https://github.com/tiveritz/how-tos-webapps)
+Webapplications that allow content management and a viewer for the users. Consume the Core API.
 
 # Core API
 * RESTful witch JSON payload

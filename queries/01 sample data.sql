@@ -50,14 +50,14 @@ INSERT INTO Super (super_id, step_id, pos) VALUES (2, 4, 2);
 INSERT INTO Super (super_id, step_id, pos) VALUES (4, 5, 1);
 INSERT INTO Super (super_id, step_id, pos) VALUES (4, 6, 2);
 
-/* Assign Steps to Sub */
-INSERT INTO Sub (step_id, explanation) VALUES (1, '1 SQL Explanation');
-INSERT INTO Sub (step_id, explanation) VALUES (7, '3 SQL Explanation');
-INSERT INTO Sub (step_id, explanation) VALUES (8, '4 SQL Explanation');
-INSERT INTO Sub (step_id, explanation) VALUES (9, '1 Cloud Server Explanation');
-INSERT INTO Sub (step_id, explanation) VALUES (10, '2 Cloud Server Explanation');
-INSERT INTO Sub (step_id, explanation) VALUES (11, '3 Cloud Server Explanation');
+/* Assign Steps to StepsExplanations */
+INSERT INTO StepsExplanations (step_id, explanation) VALUES (1, '1 SQL Explanation');
+INSERT INTO StepsExplanations (step_id, explanation) VALUES (7, '3 SQL Explanation');
+INSERT INTO StepsExplanations (step_id, explanation) VALUES (8, '4 SQL Explanation');
+INSERT INTO StepsExplanations (step_id, explanation) VALUES (9, '1 Cloud Server Explanation');
+INSERT INTO StepsExplanations (step_id, explanation) VALUES (10, '2 Cloud Server Explanation');
+INSERT INTO StepsExplanations (step_id, explanation) VALUES (11, '3 Cloud Server Explanation');
 
-INSERT INTO Sub (step_id, explanation) VALUES (2, '2.1 Do Something');
-INSERT INTO Sub (step_id, explanation) VALUES (4, '2.2.1 Do Something');
-INSERT INTO Sub (step_id, explanation) VALUES (4, '2.2.2 Do Something');
+INSERT INTO StepsExplanations (step_id, explanation) VALUES (2, '2.1 Do Something');
+INSERT INTO StepsExplanations (step_id, explanation) VALUES (5, '2.2.1 Do Something');
+INSERT INTO StepsExplanations (step_id, explanation) VALUES (6, '2.2.2 Do Something');

@@ -40,11 +40,13 @@ CREATE TABLE Steps (
     ts_update TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
     );
     
-DROP TABLE IF EXISTS Sub;
-CREATE TABLE Sub (
+DROP TABLE IF EXISTS StepsExplanations;
+CREATE TABLE StepsExplanations (
     step_id INT,
     explanation VARCHAR(2000),
-    FOREIGN KEY (step_id) REFERENCES Steps(id)
+    CONSTRAINT FOREIGN KEY (step_id)
+		REFERENCES Steps(id)
+        ON DELETE CASCADE
 );
 
 
@@ -55,14 +57,18 @@ DROP TABLE IF EXISTS HowTosUriIds;
 CREATE TABLE HowTosUriIds (
 	how_to_id INT,
     uri_id char(8) PRIMARY KEY,
-    FOREIGN KEY (how_to_id) REFERENCES HowTos(id) ON DELETE CASCADE  
+    CONSTRAINT FOREIGN KEY (how_to_id)
+		REFERENCES HowTos(id)
+		ON DELETE CASCADE
 );
 
 DROP TABLE IF EXISTS StepsUriIds;
 CREATE TABLE StepsUriIds (
 	step_id INT,
     uri_id char(8) PRIMARY KEY,
-    FOREIGN KEY (step_id) REFERENCES Steps(id) ON DELETE CASCADE  
+    CONSTRAINT FOREIGN KEY (step_id)
+		REFERENCES Steps(id)
+        ON DELETE CASCADE  
 );
 
 
@@ -75,8 +81,12 @@ CREATE TABLE HowTosSteps (
     step_id INT,
     pos INT,
     #PRIMARY KEY (how_to_id, pos),
-    FOREIGN KEY (how_to_id) REFERENCES HowTos(id),
-    FOREIGN KEY (step_id) REFERENCES Steps(id)
+    FOREIGN KEY (how_to_id)
+		REFERENCES HowTos(id)
+        ON DELETE CASCADE,
+    CONSTRAINT FOREIGN KEY (step_id)
+		REFERENCES Steps(id)
+        ON DELETE CASCADE
 );
 
 DROP TABLE IF EXISTS Super;
@@ -85,6 +95,10 @@ CREATE TABLE Super (
     step_id INT,
     pos INT,
     #PRIMARY KEY (super_id, pos),
-    FOREIGN KEY (super_id) REFERENCES Steps(id),
-    FOREIGN KEY (step_id) REFERENCES Steps(id)
+    CONSTRAINT FOREIGN KEY (super_id)
+		REFERENCES Steps(id)
+        ON DELETE CASCADE,
+    FOREIGN KEY (step_id)
+		REFERENCES Steps(id)
+        ON DELETE CASCADE
 );

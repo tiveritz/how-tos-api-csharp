@@ -22,7 +22,7 @@ SELECT * FROM HowTosSteps;
 SELECT * FROM HowTosUriIds;
 SELECT * FROM Steps;
 SELECT * FROM StepsUriIds;
-SELECT * FROM Sub;
+SELECT * FROM StepsExplanations;
 SELECT * FROM Super;
 
 
@@ -42,8 +42,12 @@ SELECT COUNT(DISTINCT(super_id))
 FROM Super;
 
 # Count SubSteps
-SELECT COUNT(step_id)
-FROM Sub;
+SELECT COUNT(id) as substeps_count
+FROM Steps
+WHERE id NOT IN (
+	SELECT DISTINCT step_id
+    FROM Super
+);
 
 
 # -----------------------------------------------------------------------------
@@ -72,8 +76,13 @@ FROM HowTosUriIds
 WHERE uri_id="a9d8cd7a";
 
 # Delete How To
-DELETE FROM HowTosUriIds
-WHERE uri_id="a9d8cd7a";
+# All connected tables are cascade deleted
+DELETE FROM HowTos
+WHERE id = (
+	SELECT how_to_id
+    FROM HowTosUriIds
+    WHERE uri_id="a9d8cd7a"
+);
 
 # Change How To name
 UPDATE HowTos
@@ -146,12 +155,17 @@ ORDER BY Super.pos;
 
 # Show the explanation of a specific step
 SELECT explanation
-FROM Sub
+FROM StepsExplanations
 WHERE step_id = '1';
 
 # Delete Step
-DELETE FROM StepsUriIds
-WHERE uri_id="dj8d7f6e";
+# All connected tables are cascade deleted
+DELETE FROM Steps
+WHERE id = (
+	SELECT step_id
+    FROM StepsUriIds
+    WHERE uri_id="dj8d7f6e"
+);
 
 # Change Step name
 UPDATE Steps
@@ -222,6 +236,7 @@ SET pos = 1	# new position
 WHERE how_to_id = 1 # currently selected howto
 AND step_id = 7; # currently selected step
 
+/*
 INSERT INTO HowTosSteps (how_to_id, step_id, pos) VALUES (1, 1, 3); # Doesn't work
-
+*/
 # Similar thing for SuperSteps...

@@ -1,58 +1,63 @@
 # How To's ![build-status](https://img.shields.io/docker/cloud/automated/tiveritz/how-tos-api) ![build-status](https://img.shields.io/docker/cloud/build/tiveritz/how-tos-api)
 This Project consists of a collection of Web Applications that allow you to manage, edit and view How To's in the form of Step-By-Step procedures. An important key aspect is the modularity of the documentation. Reusable steps, pictures, explanations, links and so on are a core concept and the database is designed with that in mind.
+
+### [Core API](https://github.com/tiveritz/how-tos-api)
+The REST API that handles all database interactions on the documentation database.<br>
 [Swagger API documentation](https://api.tiveritz.at)
 
-#### [Core API](https://github.com/tiveritz/how-tos-api)
-The REST API that handles all database interactions on the documentation database.
-
-#### [Administration](https://github.com/tiveritz/how-tos-administration)
-A Website that allows users to manage the content. Consumes the Core API.
-
-#### [Viewer](https://github.com/tiveritz/how-tos-viewer)
-A Website that allows users to view the How To's. Consumes the Core API.
+### [Webapps](https://github.com/tiveritz/how-tos-webapps)
+Webapplications that allow content management and a viewer for the users. Consume the Core API.
 
 # Core API
 * RESTful witch JSON payload
 * HTTPS over SSL
 * API versioning preparation
 * Beautiful URLs
-* GET ressources with required content
-* GET pictures as links (ToDo: How to serve static files?)
-* GET complete How To / Superstep tree with links to the steps (navigation in Viewer, Administration)
-* GET should include links to previous and next step
-* POST for content creation
-* PATCH for content update
 * DELETE with recycle bin (Restoring may be a bit tricky, because the content is very stricktly linked)
 * Basic authentication (Over access token?)
+* Ensured data integrity
+<br/>
 
 | BASE                     | URL               | GET   | POST  | PUT   | PATCH | DELETE |
 | ------------------------ | ----------------- | :---: | :---: | :---: | :---: | :----: |
-| api.tiveritz.at/hwts/v1/ | statistics        |   ✓   |       |       |       |        |
 | api.tiveritz.at/hwts/v1/ | howtos            |   ✓   |   ✓   |       |       |        |
 | api.tiveritz.at/hwts/v1/ | howtos/{id}       |   ✓   |       |       |   ✓   |   ✓    |
+| api.tiveritz.at/hwts/v1/ | statistics        |   ✓   |       |       |       |        |
 | api.tiveritz.at/hwts/v1/ | steps             |   ✓   |   ✓   |       |       |        |
 | api.tiveritz.at/hwts/v1/ | steps/{id}        |   ✓   |       |       |   ✓   |   ✓    |
+<br/>
 
-#### statistics
-GET statistical data about the available content<br/>
+#### GET howtos
+Get a list of all How To's with relevant list data, sorted by last change descending<br/>
+#### POST howtos
+Create a new How To. A title can be posted but is not mandatory<br/>
+#### GET howtos/{id}
+Get a specific How To including the Steps as tree<br/>
+#### PATCH howtos/{id}
+Change a specific How To. Title and / or Step order<br/>
+#### DELETE howtos/{id}
+Deletes a specific How To. Data integrity is ensured and all connected entries are also deleted (URI IDs, Steps)<br/>
+The client is responsible to warn about cascade deletion.<br/>
+<br/>
 
-#### howtos
-GET a list of all How To's<br/>
-POST a new How To
+#### GET statistics
+Statistical data about the available content<br/>
+<br/>
 
-#### howtos/{id}
-GET a specific How To<br/>
-PATCH (Update) information of a specific How To<br/>
-DELETE a specific How To
-
-#### steps
-GET number of all available Steps with info if it is a Substep or Superstep<br/>
-POST a new Step
-
-#### steps/{id}
-GET a specific step<br/>
-PATCH (Update) information of a specific Step<br/>
-DELETE a specific step
+#### GET steps
+Get a list of all Steps with relevant list data, sorted by last change descending<br/>
+Supersteps are marked (isSuper), to allow the client to mark them<br/>
+#### POST steps
+Create a new Step. A title can be posted but is not mandatory<br/>
+#### GET steps/{id}
+Get a specific Step including the Substeps as tree<br/>
+Supersteps are marked (isSuper), to allow the client to mark them<br/>
+#### PATCH steps/{id}
+Change a specific Step. Title and / or Substep order<br/>
+#### DELETE steps/{id}
+Deletes a specific Step. Data integrity is ensured and all connected entries are also deleted (URI IDs, Super connections, Sub connections)<br/>
+The client is responsible to warn about cascade deletion.<br/>
+<br/>
 
 ## Web Applications Diagram
 ![](./docs/server.png?raw=true "How To's server diagram")
@@ -66,7 +71,7 @@ DELETE a specific step
 ## Database Model
 ![](./docs/db_model.png?raw=true "How To's Database Model")
 
-## Documentation Core Features
+## Core Features
 Depending on the complexity and time of the project various features can be implemented. Sorted by priority descending.
 * How To's include steps, sortable
 * Steps used as Supersteps (wich linked Substeps) or Steps (with explanations), sortable

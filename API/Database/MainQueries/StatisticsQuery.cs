@@ -18,8 +18,12 @@ namespace HowTosApi.Controllers
             SELECT COUNT(DISTINCT(super_id))
             FROM Super;";
         private string SubStepsCountQuery = @"
-            SELECT COUNT(step_id)
-            FROM Sub;";
+            SELECT COUNT(id) as substeps_count
+            FROM Steps
+            WHERE id NOT IN (
+                SELECT DISTINCT step_id
+                FROM Super
+            );";
 
         public StatisticsQuery(AppDb db)
         {

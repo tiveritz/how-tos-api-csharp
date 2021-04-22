@@ -27,8 +27,12 @@ namespace HowTosApi.Controllers
                 WHERE uri_id=@uriId)
             ORDER BY HowTosSteps.pos;";
         private string DeleteHowToQuery = @"
-            DELETE FROM HowTosUriIds
-            WHERE uri_id=@uriId;";
+            DELETE FROM HowTos
+            WHERE id = (
+                SELECT how_to_id
+                FROM HowTosUriIds
+                WHERE uri_id=@uriId
+            );";
         private string ChangeHowToTitleQuery = @"
             UPDATE HowTos
             SET title = @title

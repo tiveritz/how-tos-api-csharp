@@ -39,7 +39,14 @@ namespace HowTosApi.Controllers
         public IActionResult GetHowToById(string id)
         {
             HowToQuery htq = new HowToQuery(Db);
-            return Ok(htq.GetHowToById(id));
+            HowTo ht = htq.GetHowToById(id);
+
+            if (ht == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(ht);
         }
 
         [Route("{id}")]

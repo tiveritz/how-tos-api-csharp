@@ -39,7 +39,13 @@ namespace HowTosApi.Controllers
         public IActionResult GetStepById(string id)
         {
             StepQuery sq = new StepQuery(Db);
-            return Ok(sq.GetStepById(id));
+            Step s = sq.GetStepById(id);
+            
+            if (s == null)
+            {
+                return NotFound();
+            }
+            return Ok(s);
         }
 
         [Route("{id}")]

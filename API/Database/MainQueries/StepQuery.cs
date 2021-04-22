@@ -17,8 +17,12 @@ namespace HowTosApi.Controllers
             JOIN StepsUriIds ON Steps.id=StepsUriIds.step_id
             WHERE uri_id=@uriId;";
         private string DeleteStepQuery = @"
-            DELETE FROM StepsUriIds
-            WHERE uri_id=@uriId;";
+            DELETE FROM Steps
+            WHERE id = (
+                SELECT step_id
+                FROM StepsUriIds
+                WHERE uri_id=@uriId
+            );";
         private string GetSuperQuery = @"
             SELECT Steps.title
             FROM Super

@@ -15,7 +15,8 @@ namespace HowTosApi.Controllers
                 WHEN Steps.id IN (SELECT DISTINCT super_id FROM Super) THEN true ELSE false
             END AS is_super
             FROM Steps
-            JOIN StepsUriIds ON Steps.id=StepsUriIds.step_id;";
+            JOIN StepsUriIds ON Steps.id=StepsUriIds.step_id
+            ORDER BY ts_update DESC;";
         private string CreateQuery = @"
             INSERT INTO Steps (title)
             VALUES (@title)";

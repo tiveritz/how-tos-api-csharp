@@ -52,7 +52,8 @@ FROM Sub;
 # List all How To's
 SELECT HowTosUriIds.uri_id, HowTos.title, HowTos.ts_create, HowTos.ts_update
 FROM HowTos
-JOIN HowTosUriIds ON HowTos.id=HowTosUriIds.how_to_id;
+JOIN HowTosUriIds ON HowTos.id=HowTosUriIds.how_to_id
+ORDER BY ts_update DESC;
 
 # List a specific How To by uri_id
 SELECT HowTosUriIds.uri_id, HowTos.title, HowTos.ts_create, HowTos.ts_update
@@ -93,7 +94,8 @@ CASE
 	WHEN Steps.id IN (SELECT DISTINCT super_id FROM Super) THEN true ELSE false
 END AS is_super
 FROM Steps
-JOIN StepsUriIds ON Steps.id=StepsUriIds.step_id;
+JOIN StepsUriIds ON Steps.id=StepsUriIds.step_id
+ORDER BY ts_update DESC;
 
 # List specific Step
 SELECT StepsUriIds.uri_id, Steps.title, Steps.ts_create, Steps.ts_update,

@@ -5,7 +5,7 @@ using MySql.Data.MySqlClient;
 
 namespace HowTosApi.Controllers
 {
-    public class Substeps
+    public class SubstepsQuery
     {
         private AppDb Db;
         public string GetSubstepsQuery = @"
@@ -22,7 +22,7 @@ namespace HowTosApi.Controllers
                 WHERE uri_id=@uriId)
             ORDER BY Super.pos";
 
-        public Substeps(AppDb db)
+        public SubstepsQuery(AppDb db)
         {
             Db = db;
         }

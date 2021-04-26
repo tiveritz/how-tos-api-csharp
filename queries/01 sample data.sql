@@ -22,6 +22,8 @@ INSERT INTO Steps (title, description) VALUES ('1 How to Run Cloud Server', 'Do 
 INSERT INTO Steps (title, description) VALUES ('2 How to Run Cloud Server', 'Do Something'); #10
 INSERT INTO Steps (title, description) VALUES ('3 How to Run Cloud Server', 'Do Something'); #11
 
+INSERT INTO Steps (title, description) VALUES ('A wild step appears', 'Do Something'); #12
+
 /* Create StepsIds */
 INSERT INTO StepsUriIds (step_id, uri_id) VALUES (1, "a93jdjc7"); #1
 INSERT INTO StepsUriIds (step_id, uri_id) VALUES (2, "d874djd9"); #2
@@ -34,6 +36,7 @@ INSERT INTO StepsUriIds (step_id, uri_id) VALUES (8, "djf77r6e"); #8
 INSERT INTO StepsUriIds (step_id, uri_id) VALUES (9, "ka8d752g"); #9
 INSERT INTO StepsUriIds (step_id, uri_id) VALUES (10, "dj8s763k"); #10
 INSERT INTO StepsUriIds (step_id, uri_id) VALUES (11, "a09d74j6"); #11
+INSERT INTO StepsUriIds (step_id, uri_id) VALUES (12, "5dsa6d5w"); #12
 
 /* Assign Steps to HowTo */
 INSERT INTO HowTosSteps (how_to_id, step_id, pos) VALUES (1, 1, 1);

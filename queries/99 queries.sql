@@ -93,6 +93,29 @@ WHERE id = (
 	WHERE uri_id="a9d8cd7a"
 );
 
+# Link Step to How To
+INSERT INTO HowTosSteps
+SET
+	how_to_id = (
+		SELECT how_to_id
+		FROM HowTosUriIds
+		WHERE uri_id="a9d8cd7a"
+	),
+	step_id = (
+		SELECT step_id
+		FROM StepsUriIds
+		WHERE uri_id="5dsa6d5w"
+	),
+	pos = (
+		SELECT MAX(pos) + 1
+		FROM HowTosSteps hts
+		WHERE how_to_id = (
+			SELECT how_to_id
+			FROM HowTosUriIds
+			WHERE uri_id="a9d8cd7a"
+		)
+	);
+
 
 # -----------------------------------------------------------------------------
 #    4. Steps Queries
@@ -175,6 +198,29 @@ WHERE id = (
 	FROM StepsUriIds
 	WHERE uri_id="dj8d7f6e"
 );
+
+# Link Step to Super
+INSERT INTO Super
+SET
+	super_id = (
+		SELECT step_id
+		FROM StepsUriIds
+		WHERE uri_id="djc847dj"
+	),
+	step_id = (
+		SELECT step_id
+		FROM StepsUriIds
+		WHERE uri_id="5dsa6d5w"
+	),
+	pos = (
+		SELECT MAX(pos) + 1
+		FROM Super s
+		WHERE super_id = (
+			SELECT step_id
+			FROM StepsUriIds
+			WHERE uri_id="djc847dj"
+		)
+	);
 
 # -----------------------------------------------------------------------------
 #    5. Data Integrity Queries

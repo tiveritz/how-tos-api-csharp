@@ -22,9 +22,11 @@ Webapplications that allow content management and a viewer for the users. Consum
 | ------------------------ | ----------------- | :---: | :---: | :---: | :---: | :----: |
 | api.tiveritz.at/hwts/v1/ | howtos            |   ✓   |   ✓   |       |       |        |
 | api.tiveritz.at/hwts/v1/ | howtos/{id}       |   ✓   |       |       |   ✓   |   ✓    |
+| api.tiveritz.at/hwts/v1/ | howtos/{id}/steps |       |   ✓   |       |   ✓   |   ✓    |
 | api.tiveritz.at/hwts/v1/ | statistics        |   ✓   |       |       |       |        |
 | api.tiveritz.at/hwts/v1/ | steps             |   ✓   |   ✓   |       |       |        |
 | api.tiveritz.at/hwts/v1/ | steps/{id}        |   ✓   |       |       |   ✓   |   ✓    |
+| api.tiveritz.at/hwts/v1/ | steps/{id}/steps  |       |   ✓   |       |   ✓   |   ✓    |
 <br/>
 
 #### GET howtos
@@ -34,10 +36,16 @@ Create a new How To. A title can be posted but is not mandatory<br/>
 #### GET howtos/{id}
 Get a specific How To including the Steps as tree<br/>
 #### PATCH howtos/{id}
-Change a specific How To. Title and / or Step order<br/>
+Change a specific How To<br/>
 #### DELETE howtos/{id}
 Deletes a specific How To. Data integrity is ensured and all connected entries are also deleted (URI IDs, Steps)<br/>
 The client is responsible to warn about cascade deletion.<br/>
+#### POST howtos/{id}/steps
+Add a Step to a How To<br/>
+#### PATCH howtos/{id}/steps
+Change Step order<br/>
+#### DELETE howtos/{id}/steps
+Remove a linked Step from a How To<br/>
 <br/>
 
 #### GET statistics
@@ -53,10 +61,16 @@ Create a new Step. A title can be posted but is not mandatory<br/>
 Get a specific Step including the Substeps as tree<br/>
 Supersteps are marked (isSuper), to allow the client to mark them<br/>
 #### PATCH steps/{id}
-Change a specific Step. Title and / or Substep order<br/>
+Change a specific Step<br/>
 #### DELETE steps/{id}
 Deletes a specific Step. Data integrity is ensured and all connected entries are also deleted (URI IDs, Super connections, Sub connections)<br/>
 The client is responsible to warn about cascade deletion.<br/>
+#### POST steps/{id}/steps
+Add a Step to another Step (add Substep to Superstep)<br/>
+#### PATCH steps/{id}/steps
+Change Substep order<br/>
+#### DELETE steps/{id}/steps
+Remove a Step from another Step (remove Substep from Superstep<br/>
 <br/>
 
 ## Web Applications Diagram

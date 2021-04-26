@@ -118,7 +118,7 @@ namespace HowTosApi.Controllers
             cmd.CommandText = GetStepsQuery;
             cmd.Parameters.AddWithValue("@uriId", uriId);
 
-            Substeps substeps = new Substeps(Db);
+            SubstepsQuery substeps = new SubstepsQuery(Db);
             List<StepsOrderItem> steps = substeps.QuerySubsteps(cmd);
 
             foreach (StepsOrderItem step in steps)

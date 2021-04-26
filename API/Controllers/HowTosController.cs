@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -81,6 +82,34 @@ namespace HowTosApi.Controllers
             htq.DeleteHowTo(id);
 
             return NoContent();
+        }
+
+        [Route("{id}/steps")]
+        [HttpPost]
+        public IActionResult LinkStep(string id, [FromBody]LinkStep linkStep)
+        {
+            SubstepQuery sq = new SubstepQuery(Db);
+            sq.linkStepToHowTo(id, linkStep.Id);
+            
+            return Accepted();
+        }
+
+        [Route("{id}/steps")]
+        [HttpPatch]
+        public IActionResult ChangeStepsOrder(string id, [FromBody]ChangeOrder changeOrder)
+        {
+
+
+            return Ok();
+        }
+
+        [Route("{id}/steps")]
+        [HttpDelete]
+        public IActionResult DeleteLinkedStep(string id, [FromBody]LinkStep linkStep)
+        {
+
+
+            return Ok();
         }
     }
 }

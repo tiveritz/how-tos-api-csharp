@@ -81,5 +81,15 @@ namespace HowTosApi.Controllers
 
             return NoContent();
         }
+
+        [Route("{id}/steps")]
+        [HttpPost]
+        public IActionResult LinkStep(string id, [FromBody]LinkStep linkStep)
+        {
+            SubstepQuery sq = new SubstepQuery(Db);
+            sq.linkStepToSuper(id, linkStep.Id);
+
+            return Accepted();
+        }
     }
 }

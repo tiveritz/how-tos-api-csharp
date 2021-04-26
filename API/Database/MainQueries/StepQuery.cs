@@ -53,7 +53,7 @@ namespace HowTosApi.Controllers
             if (steps.Count > 0)
             {
                 Step step = steps[0];
-                Substeps substep = new Substeps(Db);
+                SubstepsQuery substep = new SubstepsQuery(Db);
                 step.Steps = substep.GetSubsteps(uriId);
                 return step;
             }

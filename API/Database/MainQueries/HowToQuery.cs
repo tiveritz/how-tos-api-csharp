@@ -128,5 +128,12 @@ namespace HowTosApi.Controllers
 
             return steps;
         }
+
+        public bool HowToExists(string uriId) {
+            if (GetHowToById(uriId) == null) {
+                return false;
+            }
+            return true;
+        }
     }
 }

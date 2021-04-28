@@ -42,12 +42,11 @@ namespace HowTosApi.Controllers
             HowToQuery htq = new HowToQuery(Db);
             HowTo ht = htq.GetHowToById(id);
 
-            if (ht == null)
+            if (ht is not null)
             {
-                return NotFound();
+                return Ok(ht);
             }
-
-            return Ok(ht);
+            return NotFound();
         }
 
         [Route("{id}")]
@@ -57,14 +56,12 @@ namespace HowTosApi.Controllers
             HowToQuery htq = new HowToQuery(Db);
             HowTo ht = htq.GetHowToById(id);
             
-            if (ht == null)
+            if (ht is not null)
             {
-                return NotFound();
+                htq.ChangeHowTo(id, changeHowTo);
+                return Ok(ht);
             }
-
-            htq.ChangeHowTo(id, changeHowTo);
-
-            return Ok();
+                return NotFound();
         }
     
         [Route("{id}")]
@@ -72,16 +69,13 @@ namespace HowTosApi.Controllers
         public IActionResult DeleteHowToById(string id)
         {
             HowToQuery htq = new HowToQuery(Db);
-            HowTo ht = htq.GetHowToById(id);
             
-            if (ht == null)
+            if (htq.HowToExists(id))
             {
-                return NotFound();
+                htq.DeleteHowTo(id);
+                return NoContent();
             }
-
-            htq.DeleteHowTo(id);
-
-            return NoContent();
+            return NotFound();
         }
 
         [Route("{id}/steps")]
@@ -107,9 +101,15 @@ namespace HowTosApi.Controllers
         [HttpDelete]
         public IActionResult DeleteLinkedStep(string id, [FromBody]LinkStep linkStep)
         {
-
-
-            return Ok();
+            SubstepQuery sq = new SubstepQuery(Db);
+            HowToQuery htq = new HowToQuery(Db);
+            
+            if (sq.StepLinkedToHowTo(id, linkStep.Id) && htq.HowToExists(id))
+            {
+                sq.DeleteStepFromHowTo(id, linkStep.Id);
+                return Ok(htq.GetHowToById(id));
+            }
+            return NotFound();
         }
     }
 }

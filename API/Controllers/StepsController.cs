@@ -41,11 +41,11 @@ namespace HowTosApi.Controllers
             StepQuery sq = new StepQuery(Db);
             Step s = sq.GetStepById(id);
             
-            if (s == null)
+            if (s is not null)
             {
-                return NotFound();
+                return Ok(s);
             }
-            return Ok(s);
+            return NotFound();
         }
 
         [Route("{id}")]
@@ -55,14 +55,14 @@ namespace HowTosApi.Controllers
             StepQuery sq = new StepQuery(Db);
             Step s = sq.GetStepById(id);
             
-            if (s == null)
+            if (s is not null)
             {
-                return NotFound();
+                sq.ChangeStep(id, changeStep);
+                return Ok(s);
             }
+            return NotFound();
 
-            sq.ChangeStep(id, changeStep);
 
-            return Ok();
         }
 
         [Route("{id}")]
@@ -70,16 +70,13 @@ namespace HowTosApi.Controllers
         public IActionResult DeleteStepById(string id)
         {
             StepQuery sq = new StepQuery(Db);
-            Step s = sq.GetStepById(id);
-            
-            if (s == null)
+
+            if (sq.StepExists(id))
             {
-                return NotFound();
+                sq.DeleteStep(id);
+                return NoContent();
             }
-
-            sq.DeleteStep(id);
-
-            return NoContent();
+            return NotFound();
         }
 
         [Route("{id}/steps")]

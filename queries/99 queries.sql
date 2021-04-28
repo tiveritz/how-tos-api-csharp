@@ -116,6 +116,27 @@ SET
 		)
 	);
 
+# Get Step of a How To
+SELECT uri_id
+FROM HowTosSteps
+JOIN StepsUriIds ON StepsUriIds.step_id=HowTosSteps.step_id
+WHERE how_to_id = (
+	SELECT how_to_id
+	FROM HowTosUriIds
+	WHERE uri_id="a9d8cd7a"
+) AND uri_id="d874djd9";
+
+# Delete Step from a How To
+DELETE FROM HowTosSteps
+WHERE how_to_id = (
+	SELECT how_to_id
+	FROM HowTosUriIds
+	WHERE uri_id="a9d8cd7a"
+) AND step_id = (
+	SELECT step_id
+	FROM StepsUriIds
+	WHERE uri_id="d874djd9"
+);
 
 # -----------------------------------------------------------------------------
 #    4. Steps Queries

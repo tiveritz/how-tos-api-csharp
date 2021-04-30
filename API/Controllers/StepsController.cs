@@ -61,8 +61,6 @@ namespace HowTosApi.Controllers
                 return Ok(s);
             }
             return NotFound();
-
-
         }
 
         [Route("{id}")]
@@ -86,7 +84,32 @@ namespace HowTosApi.Controllers
             SubstepQuery sq = new SubstepQuery(Db);
             sq.linkStepToSuper(id, linkStep.Id);
 
-            return Accepted();
+            return Ok();
+        }
+
+        [Route("{id}/steps")]
+        [HttpPatch]
+        public IActionResult ChangeStepsOrder(string id, [FromBody]ChangeOrder changeOrder)
+        {
+            SubstepQuery sq = new SubstepQuery(Db);
+            sq.changeSuperOrder(id, changeOrder);
+
+            return Ok();
+        }
+
+        [Route("{id}/steps")]
+        [HttpDelete]
+        public IActionResult DeleteLinkedStep(string id, [FromBody]LinkStep linkStep)
+        {
+            SubstepQuery ssq = new SubstepQuery(Db);
+            StepQuery sq = new StepQuery(Db);
+            
+            if (ssq.StepLinkedToSuper(id, linkStep.Id) && sq.StepExists(id))
+            {
+                ssq.DeleteStepFromSuper(id, linkStep.Id);
+                return Ok(sq.GetStepById(id));
+            }
+            return NotFound();
         }
     }
 }

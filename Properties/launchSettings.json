@@ -26,7 +26,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "BASE_URL" : "https://localhost:5001/hwts/v1/",
-        "DB_CONNECTION_STRING": "Server=localhost;Database=howtos;Uid=howtos;Pwd=pass;"
+        "DB_CONNECTION_STRING": "Server=localhost;Database=howtos;Uid=howtos;Pwd=pass;Allow User Variables=True"
       }
     }
   }

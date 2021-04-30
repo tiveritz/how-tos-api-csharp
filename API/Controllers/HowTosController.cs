@@ -85,14 +85,15 @@ namespace HowTosApi.Controllers
             SubstepQuery sq = new SubstepQuery(Db);
             sq.linkStepToHowTo(id, linkStep.Id);
             
-            return Accepted();
+            return Ok();
         }
 
         [Route("{id}/steps")]
         [HttpPatch]
         public IActionResult ChangeStepsOrder(string id, [FromBody]ChangeOrder changeOrder)
         {
-
+            SubstepQuery sq = new SubstepQuery(Db);
+            sq.changeHowToOrder(id, changeOrder);
 
             return Ok();
         }

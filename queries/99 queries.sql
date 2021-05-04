@@ -253,8 +253,15 @@ WHERE id NOT IN (
 	WHERE Super.super_id = (
 		SELECT step_id
 		FROM StepsUriIds
-		WHERE uri_id="djc847dj")
-	ORDER BY Super.pos);
+		WHERE uri_id="2ls98s7e"
+        )
+	)
+AND id != (
+		SELECT step_id
+		FROM StepsUriIds
+		WHERE uri_id="2ls98s7e"
+        )
+ORDER BY ts_update DESC;
 
 
 # -----------------------------------------------------------------------------

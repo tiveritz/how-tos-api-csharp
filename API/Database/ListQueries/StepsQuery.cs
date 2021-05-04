@@ -49,8 +49,15 @@ namespace HowTosApi.Controllers
                 WHERE Super.super_id = (
                     SELECT step_id
                     FROM StepsUriIds
-                    WHERE uri_id=@stepUriId)
-                ORDER BY Super.pos);";
+                    WHERE uri_id=@stepUriId
+                    )
+                )
+            AND id != (
+                    SELECT step_id
+                    FROM StepsUriIds
+                    WHERE uri_id=@stepUriId
+                    )
+            ORDER BY ts_update DESC;";
         private string CreateQuery = @"
             INSERT INTO Steps (title)
             VALUES (@title)";

@@ -125,7 +125,7 @@ FROM Steps
 JOIN StepsUriIds ON StepsUriIds.step_id = Steps.id
 WHERE id NOT IN (
 	SELECT id
-	FROM steps
+	FROM Steps
 	JOIN HowTosSteps ON HowTosSteps.step_id = Steps.id
 	WHERE HowTosSteps.how_to_id = (
 		SELECT how_to_id

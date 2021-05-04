@@ -17,6 +17,40 @@ namespace HowTosApi.Controllers
             FROM Steps
             JOIN StepsUriIds ON Steps.id=StepsUriIds.step_id
             ORDER BY ts_update DESC;";
+        
+        private string GetHowToLinkableQuery = @"
+            SELECT StepsUriIds.uri_id, Steps.title, Steps.ts_create, Steps.ts_update,
+            CASE
+                WHEN Steps.id IN (SELECT DISTINCT super_id FROM Super) THEN true ELSE false
+            END AS is_super
+            FROM Steps
+            JOIN StepsUriIds ON StepsUriIds.step_id = Steps.id
+            WHERE id NOT IN (
+                SELECT id
+                FROM steps
+                JOIN HowTosSteps ON HowTosSteps.step_id = Steps.id
+                WHERE HowTosSteps.how_to_id = (
+                    SELECT how_to_id
+                    FROM HowTosUriIds
+                    WHERE uri_id=@howToUriId)
+                ORDER BY HowTosSteps.pos);";
+    
+        private string GetStepLinkableQuery = @"
+            SELECT StepsUriIds.uri_id, Steps.title, Steps.ts_create, Steps.ts_update,
+            CASE
+                WHEN Steps.id IN (SELECT DISTINCT super_id FROM Super) THEN true ELSE false
+            END AS is_super
+            FROM Steps
+            JOIN StepsUriIds ON StepsUriIds.step_id = Steps.id
+            WHERE id NOT IN (
+                SELECT id
+                FROM Steps
+                JOIN Super ON Super.step_id = Steps.id
+                WHERE Super.super_id = (
+                    SELECT step_id
+                    FROM StepsUriIds
+                    WHERE uri_id=@stepUriId)
+                ORDER BY Super.pos);";
         private string CreateQuery = @"
             INSERT INTO Steps (title)
             VALUES (@title)";
@@ -52,14 +86,32 @@ namespace HowTosApi.Controllers
             return steps;
         }
 
+        public List<StepListItem> GetHowToLinkable(string uriId)
+        {
+            MySqlCommand cmd = Db.Connection.CreateCommand();
+            cmd.CommandText = GetHowToLinkableQuery;
+            cmd.Parameters.AddWithValue("@howToUriId", uriId);
+
+            return QueryRead(cmd);
+        }
+
+        public List<StepListItem> GetStepLinkable(string uriId)
+        {
+            MySqlCommand cmd = Db.Connection.CreateCommand();
+            cmd.CommandText = GetStepLinkableQuery;
+            cmd.Parameters.AddWithValue("@stepUriId", uriId);
+
+            return QueryRead(cmd);
+        }
+
         public string CreateStep(CreateStep createStep)
         {
             // Writes new HowTo to db
-            MySqlCommand createStepCmd = Db.Connection.CreateCommand();
-            createStepCmd.CommandText = CreateQuery;
-            createStepCmd.Parameters.AddWithValue("@title", createStep.Title);
+            MySqlCommand cmd = Db.Connection.CreateCommand();
+            cmd.CommandText = CreateQuery;
+            cmd.Parameters.AddWithValue("@title", createStep.Title);
 
-            int id = Db.ExecuteNoneQueryAndGetId(createStepCmd);
+            int id = Db.ExecuteNoneQueryAndGetId(cmd);
 
             // Generates a uriId
             string uriId = UriIdGenerator.Generate(id);
@@ -115,9 +167,7 @@ namespace HowTosApi.Controllers
             cmd.CommandText = GetStepsForHowToQuery;
             cmd.Parameters.AddWithValue("@uriId", uriId);
 
-            List<StepListItem> steps = QueryRead(cmd);
-
-            return steps;
+            return QueryRead(cmd);
         }
     }
 }

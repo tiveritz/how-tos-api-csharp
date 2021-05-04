@@ -18,8 +18,8 @@ namespace HowTosApi.Controllers
         [HttpGet]
         public IActionResult GetAllSteps()
         {
-            StepsQuery htq = new StepsQuery(Db);
-            return Ok(htq.GetAll());
+            StepsQuery sq = new StepsQuery(Db);
+            return Ok(sq.GetAll());
         }
         
         [HttpPost]
@@ -75,6 +75,16 @@ namespace HowTosApi.Controllers
                 return NoContent();
             }
             return NotFound();
+        }
+
+
+        [Route("{id}/linkable")]
+        [HttpGet]
+        public IActionResult GetLinkableSteps(string id)
+        {
+            StepsQuery sq = new StepsQuery(Db);
+            return Ok(sq.GetStepLinkable(id));
+  
         }
 
         [Route("{id}/steps")]

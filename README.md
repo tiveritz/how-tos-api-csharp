@@ -18,15 +18,17 @@ Webapplications that allow content management and a viewer for the users. Consum
 * Ensured data integrity
 <br/>
 
-| BASE                     | URL               | GET   | POST  | PUT   | PATCH | DELETE |
-| ------------------------ | ----------------- | :---: | :---: | :---: | :---: | :----: |
-| api.tiveritz.at/hwts/v1/ | howtos            |   ✓   |   ✓   |       |       |        |
-| api.tiveritz.at/hwts/v1/ | howtos/{id}       |   ✓   |       |       |   ✓   |   ✓    |
-| api.tiveritz.at/hwts/v1/ | howtos/{id}/steps |       |   ✓   |       |   ✓   |   ✓    |
-| api.tiveritz.at/hwts/v1/ | statistics        |   ✓   |       |       |       |        |
-| api.tiveritz.at/hwts/v1/ | steps             |   ✓   |   ✓   |       |       |        |
-| api.tiveritz.at/hwts/v1/ | steps/{id}        |   ✓   |       |       |   ✓   |   ✓    |
-| api.tiveritz.at/hwts/v1/ | steps/{id}/steps  |       |   ✓   |       |   ✓   |   ✓    |
+| BASE                     | URL                  | GET   | POST  | PUT   | PATCH | DELETE |
+| ------------------------ | -------------------- | :---: | :---: | :---: | :---: | :----: |
+| api.tiveritz.at/hwts/v1/ | howtos               |   ✓   |   ✓   |       |       |        |
+| api.tiveritz.at/hwts/v1/ | howtos/{id}          |   ✓   |       |       |   ✓   |   ✓    |
+| api.tiveritz.at/hwts/v1/ | howtos/{id}/linkable |   ✓   |       |       |       |        |
+| api.tiveritz.at/hwts/v1/ | howtos/{id}/steps    |       |   ✓   |       |   ✓   |   ✓    |
+| api.tiveritz.at/hwts/v1/ | statistics           |   ✓   |       |       |       |        |
+| api.tiveritz.at/hwts/v1/ | steps                |   ✓   |   ✓   |       |       |        |
+| api.tiveritz.at/hwts/v1/ | steps/{id}           |   ✓   |       |       |   ✓   |   ✓    |
+| api.tiveritz.at/hwts/v1/ | steps/{id}/linkable  |   ✓   |       |       |       |        |
+| api.tiveritz.at/hwts/v1/ | steps/{id}/steps     |       |   ✓   |       |   ✓   |   ✓    |
 <br/>
 
 #### GET howtos
@@ -40,6 +42,8 @@ Change a specific How To<br/>
 #### DELETE howtos/{id}
 Deletes a specific How To. Data integrity is ensured and all connected entries are also deleted (URI IDs, Steps)<br/>
 The client is responsible to warn about cascade deletion.<br/>
+#### GET howtos/{id}/linkable
+Get a list of all Steps that can be added to the How To<br/>
 #### POST howtos/{id}/steps
 Add a Step to a How To<br/>
 #### PATCH howtos/{id}/steps
@@ -65,6 +69,8 @@ Change a specific Step<br/>
 #### DELETE steps/{id}
 Deletes a specific Step. Data integrity is ensured and all connected entries are also deleted (URI IDs, Super connections, Sub connections)<br/>
 The client is responsible to warn about cascade deletion.<br/>
+#### GET steps/{id}/linkable
+Get a list of all Substeps that can be added to the Step<br/>
 #### POST steps/{id}/steps
 Add a Step to another Step (add Substep to Superstep)<br/>
 #### PATCH steps/{id}/steps

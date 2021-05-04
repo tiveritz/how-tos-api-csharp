@@ -78,6 +78,15 @@ namespace HowTosApi.Controllers
             return NotFound();
         }
 
+        [Route("{id}/linkable")]
+        [HttpGet]
+        public IActionResult GetLinkableSteps(string id)
+        {
+            StepsQuery sq = new StepsQuery(Db);
+            return Ok(sq.GetHowToLinkable(id));
+  
+        }
+
         [Route("{id}/steps")]
         [HttpPost]
         public IActionResult LinkStep(string id, [FromBody]LinkStep linkStep)

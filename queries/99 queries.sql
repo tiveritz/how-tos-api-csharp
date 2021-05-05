@@ -246,20 +246,20 @@ CASE
 END AS is_super
 FROM Steps
 JOIN StepsUriIds ON StepsUriIds.step_id = Steps.id
-WHERE id NOT IN (
+WHERE id NOT IN ( # can not link direct children
 	SELECT id
 	FROM Steps
 	JOIN Super ON Super.step_id = Steps.id
 	WHERE Super.super_id = (
 		SELECT step_id
 		FROM StepsUriIds
-		WHERE uri_id="2ls98s7e"
+		WHERE uri_id="a00d9s8e"
         )
 	)
-AND id != (
+AND id != ( # can not link itself
 		SELECT step_id
 		FROM StepsUriIds
-		WHERE uri_id="2ls98s7e"
+		WHERE uri_id="a00d9s8e"
         )
 ORDER BY ts_update DESC;
 
@@ -281,20 +281,30 @@ WHERE HowTos.id IN (
     )
 );
 
-# Check if a Step is linked to a Super
-SELECT StepsUriIds.uri_id, Steps.title
+# Get uriIds of Supersteps
+SELECT StepsUriIds.uri_id
 FROM Steps
 JOIN StepsUriIds ON Steps.id=StepsUriIds.step_id
-WHERE uri_id IN (
-	SELECT super_id
+WHERE id IN (
+SELECT super_id
     FROM Super
     WHERE step_id IN (
 		SELECT step_id
         FROM StepsUriIds
-        WHERE uri_id = "2ls98s7e"
+        WHERE uri_id = "a00d9s8e"
     )
 );
 
+# List uriIds of Substeps
+SELECT StepsUriIds.uri_id
+FROM Steps
+JOIN StepsUriIds ON StepsUriIds.step_id = Steps.id
+JOIN Super ON Super.step_id = Steps.id
+WHERE Super.super_id = (
+	SELECT step_id
+	FROM StepsUriIds
+	WHERE uri_id="d874djd9")
+ORDER BY Super.pos;
 
 # -----------------------------------------------------------------------------
 #    6. Order Queries

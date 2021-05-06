@@ -77,9 +77,9 @@ CREATE TABLE StepsUriIds (
 # -----------------------------------------------------------------------------
 DROP TABLE IF EXISTS HowTosSteps;
 CREATE TABLE HowTosSteps (
-    how_to_id INT,
-    step_id INT,
-    pos INT,
+    how_to_id INT NOT NULL,
+    step_id INT NOT NULL,
+    pos INT NOT NULL,
     #PRIMARY KEY (how_to_id, pos),
     FOREIGN KEY (how_to_id)
 		REFERENCES HowTos(id)
@@ -91,9 +91,9 @@ CREATE TABLE HowTosSteps (
 
 DROP TABLE IF EXISTS Super;
 CREATE TABLE Super (
-	super_id INT,
-    step_id INT,
-    pos INT,
+	super_id INT NOT NULL,
+    step_id INT NOT NULL,
+    pos INT NOT NULL,
     #PRIMARY KEY (super_id, pos),
     CONSTRAINT FOREIGN KEY (super_id)
 		REFERENCES Steps(id)

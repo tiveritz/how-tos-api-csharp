@@ -39,19 +39,19 @@ INSERT INTO StepsUriIds (step_id, uri_id) VALUES (11, "a09d74j6"); #11
 INSERT INTO StepsUriIds (step_id, uri_id) VALUES (12, "5dsa6d5w"); #12
 
 /* Assign Steps to HowTo */
-INSERT INTO HowTosSteps (how_to_id, step_id, pos) VALUES (1, 1, 1);
-INSERT INTO HowTosSteps (how_to_id, step_id, pos) VALUES (1, 2, 2);
-INSERT INTO HowTosSteps (how_to_id, step_id, pos) VALUES (1, 7, 3);
-INSERT INTO HowTosSteps (how_to_id, step_id, pos) VALUES (1, 8, 4);
-INSERT INTO HowTosSteps (how_to_id, step_id, pos) VALUES (2, 9, 1);
-INSERT INTO HowTosSteps (how_to_id, step_id, pos) VALUES (2, 10, 2);
-INSERT INTO HowTosSteps (how_to_id, step_id, pos) VALUES (2, 11, 3);
+INSERT INTO HowTosSteps (how_to_id, step_id, pos) VALUES (1, 1, 0);
+INSERT INTO HowTosSteps (how_to_id, step_id, pos) VALUES (1, 2, 1);
+INSERT INTO HowTosSteps (how_to_id, step_id, pos) VALUES (1, 7, 2);
+INSERT INTO HowTosSteps (how_to_id, step_id, pos) VALUES (1, 8, 3);
+INSERT INTO HowTosSteps (how_to_id, step_id, pos) VALUES (2, 9, 0);
+INSERT INTO HowTosSteps (how_to_id, step_id, pos) VALUES (2, 10, 1);
+INSERT INTO HowTosSteps (how_to_id, step_id, pos) VALUES (2, 11, 2);
 
 /* Assign Steps to Super */
-INSERT INTO Super (super_id, step_id, pos) VALUES (2, 3, 1);
-INSERT INTO Super (super_id, step_id, pos) VALUES (2, 4, 2);
-INSERT INTO Super (super_id, step_id, pos) VALUES (4, 5, 1);
-INSERT INTO Super (super_id, step_id, pos) VALUES (4, 6, 2);
+INSERT INTO Super (super_id, step_id, pos) VALUES (2, 3, 0);
+INSERT INTO Super (super_id, step_id, pos) VALUES (2, 4, 1);
+INSERT INTO Super (super_id, step_id, pos) VALUES (4, 5, 0);
+INSERT INTO Super (super_id, step_id, pos) VALUES (4, 6, 1);
 
 /* Assign Steps to StepsExplanations */
 INSERT INTO StepsExplanations (step_id, explanation) VALUES (1, '1 SQL Explanation');

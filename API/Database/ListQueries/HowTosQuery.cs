@@ -8,11 +8,7 @@ namespace HowTosApi.Controllers
     public class HowTosQuery
     {
         private AppDb Db;
-        private string GetAllQuery = @"
-            SELECT HowTosUriIds.uri_id, HowTos.title, HowTos.ts_create, HowTos.ts_update
-            FROM HowTos
-            JOIN HowTosUriIds ON HowTos.id=HowTosUriIds.how_to_id
-            ORDER BY ts_update DESC;";
+        private string GetAllHowTosQuery = @"SELECT * FROM GetHowTos;";
         private string CreateQuery = @"
             INSERT INTO HowTos (title)
             VALUES (@title)";
@@ -28,7 +24,7 @@ namespace HowTosApi.Controllers
         public List<HowToListItem> GetAll()
         {
             MySqlCommand cmd = Db.Connection.CreateCommand();
-            cmd.CommandText = GetAllQuery;
+            cmd.CommandText = GetAllHowTosQuery;
 
             List<HowToListItem> howTos = QueryRead(cmd);
  

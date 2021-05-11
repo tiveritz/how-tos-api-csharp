@@ -8,14 +8,7 @@ namespace HowTosApi.Controllers
     public class StepQuery
     {
         private AppDb Db;
-        private string GetStepByIdQuery = @"
-            SELECT StepsUriIds.uri_id, Steps.title, Steps.ts_create, Steps.ts_update,
-            CASE
-                WHEN Steps.id IN (SELECT DISTINCT super_id FROM Super) THEN true ELSE false
-            END AS is_super
-            FROM Steps
-            JOIN StepsUriIds ON Steps.id=StepsUriIds.step_id
-            WHERE uri_id=@uriId;";
+        private string GetStepByIdQuery = @"SELECT * FROM GetHowTos WHERE uri_id=@uriId;";
         private string DeleteStepQuery = @"
             DELETE FROM Steps
             WHERE id = (

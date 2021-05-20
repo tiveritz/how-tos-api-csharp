@@ -8,11 +8,7 @@ namespace HowTosApi.Controllers
     public class HowToQuery
     {
         private AppDb Db;
-        private string GetHowToByIdQuery = @"
-            SELECT HowTosUriIds.uri_id, HowTos.title, HowTos.ts_create, HowTos.ts_update
-            FROM HowTos
-            JOIN HowTosUriIds ON HowTos.id=HowTosUriIds.how_to_id
-            WHERE uri_id=@uriId";
+        private string GetHowToByIdQuery = @"SELECT * FROM GetHowTos WHERE uri_id=@uriId";
         private string GetStepsQuery = @"
             SELECT StepsUriIds.uri_id, Steps.title,
             CASE

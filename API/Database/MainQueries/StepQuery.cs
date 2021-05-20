@@ -8,14 +8,7 @@ namespace HowTosApi.Controllers
     public class StepQuery
     {
         private AppDb Db;
-        private string GetStepByIdQuery = @"
-            SELECT StepsUriIds.uri_id, Steps.title, Steps.ts_create, Steps.ts_update,
-            CASE
-                WHEN Steps.id IN (SELECT DISTINCT super_id FROM Super) THEN true ELSE false
-            END AS is_super
-            FROM Steps
-            JOIN StepsUriIds ON Steps.id=StepsUriIds.step_id
-            WHERE uri_id=@uriId;";
+        private string GetStepByIdQuery = @"SELECT * FROM GetSteps WHERE uri_id=@uriId;";
         private string DeleteStepQuery = @"
             DELETE FROM Steps
             WHERE id = (
@@ -23,11 +16,6 @@ namespace HowTosApi.Controllers
                 FROM StepsUriIds
                 WHERE uri_id=@uriId
             );";
-        private string GetSuperQuery = @"
-            SELECT Steps.title
-            FROM Super
-            JOIN Steps ON Super.super_id = Steps.id
-            WHERE step_id = 4;";
         private string ChangeStepQuery = @"
             UPDATE Steps
             SET title = @title

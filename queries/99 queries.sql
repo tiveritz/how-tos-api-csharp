@@ -285,36 +285,15 @@ WHERE id NOT IN ( # can not link direct children
 	WHERE Super.super_id = (
 		SELECT step_id
 		FROM StepsUriIds
-		WHERE uri_id="a00d9s8e"
+		WHERE uri_id="2ls98s7e"
         )
 	)
-AND id != ( # can not link itself
+AND id != (
 		SELECT step_id
 		FROM StepsUriIds
-		WHERE uri_id="a00d9s8e"
+		WHERE uri_id="2ls98s7e"
         )
 ORDER BY ts_update DESC;
-# Get Step of a Super
-SELECT uri_id
-FROM Super
-JOIN StepsUriIds ON StepsUriIds.step_id=Super.step_id
-WHERE super_id = (
-	SELECT step_id
-	FROM StepsUriIds
-	WHERE uri_id="d874djd9"
-) AND uri_id="2ls98s7e";
-
-# Delete Step from a Super
-DELETE FROM Super
-WHERE super_id = (
-	SELECT step_id
-	FROM StepsUriIds
-	WHERE uri_id="d874djd9"
-) AND step_id = (
-	SELECT step_id
-	FROM StepsUriIds
-	WHERE uri_id="2ls98s7e"
-);
 
 
 # -----------------------------------------------------------------------------

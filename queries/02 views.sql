@@ -42,4 +42,4 @@ CREATE VIEW GetSteps AS
 	JOIN StepsUriIds ON Steps.id=StepsUriIds.step_id;
 
 SELECT * FROM GetSteps ORDER BY ts_update DESC; #GetAllStepsQuery
-SELECT * FROM GetHowTos WHERE uri_id=@uriId; #GetStepByIdQuery
+SELECT * FROM GetSteps WHERE uri_id=@uriId; #GetStepByIdQuery

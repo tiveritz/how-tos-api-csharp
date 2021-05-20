@@ -8,7 +8,7 @@ namespace HowTosApi.Controllers
     public class StepQuery
     {
         private AppDb Db;
-        private string GetStepByIdQuery = @"SELECT * FROM GetHowTos WHERE uri_id=@uriId;";
+        private string GetStepByIdQuery = @"SELECT * FROM GetSteps WHERE uri_id=@uriId;";
         private string DeleteStepQuery = @"
             DELETE FROM Steps
             WHERE id = (
@@ -16,11 +16,6 @@ namespace HowTosApi.Controllers
                 FROM StepsUriIds
                 WHERE uri_id=@uriId
             );";
-        private string GetSuperQuery = @"
-            SELECT Steps.title
-            FROM Super
-            JOIN Steps ON Super.super_id = Steps.id
-            WHERE step_id = 4;";
         private string ChangeStepQuery = @"
             UPDATE Steps
             SET title = @title

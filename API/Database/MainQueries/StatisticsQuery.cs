@@ -21,7 +21,7 @@ namespace HowTosApi.Controllers
             SELECT COUNT(id) as substeps_count
             FROM Steps
             WHERE id NOT IN (
-                SELECT DISTINCT step_id
+                SELECT DISTINCT super_id
                 FROM Super
             );";
 

@@ -19,7 +19,7 @@ namespace HowTosApi.Controllers
             JOIN StepsUriIds ON StepsUriIds.step_id = Steps.id
             WHERE id NOT IN (
                 SELECT id
-                FROM steps
+                FROM Steps
                 JOIN HowTosSteps ON HowTosSteps.step_id = Steps.id
                 WHERE HowTosSteps.how_to_id = (
                     SELECT how_to_id
@@ -69,6 +69,29 @@ namespace HowTosApi.Controllers
                 FROM HowTosUriIds
                 WHERE uri_id=@uriId)
             ORDER BY HowTosSteps.pos;";
+        private string GetSuperUriIds = @"
+            SELECT StepsUriIds.uri_id
+            FROM Steps
+            JOIN StepsUriIds ON Steps.id=StepsUriIds.step_id
+            WHERE id IN (
+            SELECT super_id
+                FROM Super
+                WHERE step_id IN (
+                    SELECT step_id
+                    FROM StepsUriIds
+                    WHERE uri_id = @uriId
+                )
+            );";
+        private string GetSubstepUriIds = @"
+            SELECT StepsUriIds.uri_id
+            FROM Steps
+            JOIN StepsUriIds ON StepsUriIds.step_id = Steps.id
+            JOIN Super ON Super.step_id = Steps.id
+            WHERE Super.super_id = (
+                SELECT step_id
+                FROM StepsUriIds
+                WHERE uri_id=@uriId)
+            ORDER BY Super.pos;";
 
         public StepsQuery(AppDb db)
         {
@@ -100,7 +123,54 @@ namespace HowTosApi.Controllers
             cmd.CommandText = GetStepLinkableQuery;
             cmd.Parameters.AddWithValue("@stepUriId", uriId);
 
-            return QueryRead(cmd);
+            List<StepListItem> steps = QueryRead(cmd);
+
+            for (int i = steps.Count - 1; i >= 0; i--)
+            {
+                if (stepHasParent(steps[i].Id, uriId)) steps.RemoveAt(i);
+                if (stepHasChild(steps[i].Id, uriId)) steps.RemoveAt(i);
+            }
+
+            return steps;
+        }
+
+        private bool stepHasParent(string stepToCheck, string substepUriId)
+        {
+            MySqlCommand cmd = Db.Connection.CreateCommand();
+            cmd.CommandText = GetSuperUriIds;
+            cmd.Parameters.AddWithValue("@uriId", stepToCheck);
+
+            List<string> superUriIds = QueryReadsuperUriIds(cmd);
+
+            if (stepToCheck == substepUriId) return true;
+            if (superUriIds == null) return false;
+            foreach (string superUriId in superUriIds)
+            {
+                if (stepHasParent(superUriId, substepUriId))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+            private bool stepHasChild(string stepToCheck, string superUriId)
+        {
+            MySqlCommand cmd = Db.Connection.CreateCommand();
+            cmd.CommandText = GetSubstepUriIds;
+            cmd.Parameters.AddWithValue("@uriId", stepToCheck);
+
+            List<string> substepUriIds = QueryReadsuperUriIds(cmd);
+
+            if (stepToCheck == superUriId) return true;
+            if (substepUriIds == null) return false;
+            foreach (string substepUriId in substepUriIds)
+            {
+                if (stepHasChild(substepUriId, superUriId))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public string CreateStep(CreateStep createStep)
@@ -159,7 +229,31 @@ namespace HowTosApi.Controllers
             }
             return steps;
         }
+        private List<string> QueryReadsuperUriIds(MySqlCommand cmd)
+        {
+            List<string> uriIds = new List<string>();
 
+            try
+            {
+                Db.Connection.Open();
+                cmd.Prepare();
+                MySqlDataReader data = cmd.ExecuteReader();
+
+                while (data.Read()) {
+                    uriIds.Add(data.GetString(0));
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return null;
+            }
+            finally
+            {
+                Db.Connection.Close();
+            }
+            return uriIds;
+        }
         internal List<StepListItem> GetStepsForHowTo(string uriId)
         {
             MySqlCommand cmd = Db.Connection.CreateCommand();

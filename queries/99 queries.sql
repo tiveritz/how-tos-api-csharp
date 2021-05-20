@@ -12,6 +12,8 @@
 # 4. Steps Queries
 # 5. Data Integrity Queries
 # 6. Order Queries
+# 6.1 Change Order of How To's
+# 6.2 Change Order of Substeps
 
 
 # -----------------------------------------------------------------------------
@@ -93,7 +95,7 @@ WHERE id = (
 	WHERE uri_id="a9d8cd7a"
 );
 
-# Link Step to How To
+# Link Step to How To   
 INSERT INTO HowTosSteps
 SET
 	how_to_id = (
@@ -104,16 +106,30 @@ SET
 	step_id = (
 		SELECT step_id
 		FROM StepsUriIds
-		WHERE uri_id="5dsa6d5w"
+		WHERE uri_id="d874djd9"
 	),
 	pos = (
-		SELECT MAX(pos) + 1
-		FROM HowTosSteps hts
-		WHERE how_to_id = (
-			SELECT how_to_id
-			FROM HowTosUriIds
-			WHERE uri_id="a9d8cd7a"
-		)
+		CASE
+			WHEN ( # WHEN no steps are linked, position = 0
+				SELECT COUNT(step_id)
+					FROM HowTosSteps hts
+					WHERE how_to_id = (
+						SELECT how_to_id
+						FROM HowTosUriIds
+						WHERE uri_id="a9d8cd7a"
+					)
+				) = 0
+			THEN 0
+			ELSE ( # WHEN at least one step is linked, assign new pos
+			SELECT MAX(pos) + 1
+				FROM HowTosSteps hts
+				WHERE how_to_id = (
+					SELECT how_to_id
+					FROM HowTosUriIds
+					WHERE uri_id="a9d8cd7a"
+					)
+                )
+		END
 	);
 
 # List all Steps that can be added
@@ -125,13 +141,14 @@ FROM Steps
 JOIN StepsUriIds ON StepsUriIds.step_id = Steps.id
 WHERE id NOT IN (
 	SELECT id
-	FROM steps
+	FROM Steps
 	JOIN HowTosSteps ON HowTosSteps.step_id = Steps.id
 	WHERE HowTosSteps.how_to_id = (
 		SELECT how_to_id
 		FROM HowTosUriIds
 		WHERE uri_id="a9d8cd7a")
 	ORDER BY HowTosSteps.pos);
+
 
 
 # -----------------------------------------------------------------------------
@@ -216,28 +233,43 @@ WHERE id = (
 	WHERE uri_id="dj8d7f6e"
 );
 
-# Link Step to Super
+# Link Step to Super 
 INSERT INTO Super
 SET
 	super_id = (
 		SELECT step_id
 		FROM StepsUriIds
-		WHERE uri_id="djc847dj"
+		WHERE uri_id="d874djd9"
 	),
 	step_id = (
 		SELECT step_id
 		FROM StepsUriIds
-		WHERE uri_id="5dsa6d5w"
+		WHERE uri_id="2ls98s7e"
 	),
 	pos = (
-		SELECT MAX(pos) + 1
-		FROM Super s
-		WHERE super_id = (
-			SELECT step_id
-			FROM StepsUriIds
-			WHERE uri_id="djc847dj"
-		)
-	);
+		CASE
+			WHEN ( # WHEN no steps are linked, position = 0
+				SELECT COUNT(step_id)
+					FROM Super s
+						WHERE super_id = (
+							SELECT step_id
+							FROM StepsUriIds
+							WHERE uri_id="d874djd9"
+						)
+				) = 0
+			THEN 0
+			ELSE ( # WHEN at least one step is linked, assign new pos
+			SELECT MAX(pos) + 1
+				FROM Super s
+					WHERE super_id = (
+						SELECT step_id
+						FROM StepsUriIds
+						WHERE uri_id="d874djd9"
+					)
+                )
+		END
+    );
+
 
 # List all Steps that can be added
 SELECT StepsUriIds.uri_id, Steps.title, Steps.ts_create, Steps.ts_update,
@@ -246,7 +278,7 @@ CASE
 END AS is_super
 FROM Steps
 JOIN StepsUriIds ON StepsUriIds.step_id = Steps.id
-WHERE id NOT IN (
+WHERE id NOT IN ( # can not link direct children
 	SELECT id
 	FROM Steps
 	JOIN Super ON Super.step_id = Steps.id
@@ -281,50 +313,135 @@ WHERE HowTos.id IN (
     )
 );
 
-# Check if a Step is linked to a Super
-SELECT StepsUriIds.uri_id, Steps.title
+# Get uriIds of Supersteps
+SELECT StepsUriIds.uri_id
 FROM Steps
 JOIN StepsUriIds ON Steps.id=StepsUriIds.step_id
-WHERE uri_id IN (
-	SELECT super_id
+WHERE id IN (
+SELECT super_id
     FROM Super
     WHERE step_id IN (
 		SELECT step_id
         FROM StepsUriIds
-        WHERE uri_id = "2ls98s7e"
+        WHERE uri_id = "a00d9s8e"
     )
 );
 
+# List uriIds of Substeps
+SELECT StepsUriIds.uri_id
+FROM Steps
+JOIN StepsUriIds ON StepsUriIds.step_id = Steps.id
+JOIN Super ON Super.step_id = Steps.id
+WHERE Super.super_id = (
+	SELECT step_id
+	FROM StepsUriIds
+	WHERE uri_id="d874djd9")
+ORDER BY Super.pos;
 
 # -----------------------------------------------------------------------------
 #    6. Order Queries
+#    6.1 Change Order of How To Steps
 # -----------------------------------------------------------------------------
-# Change Order of How To Steps
-SELECT *
+# Move step down -> Move 0 to 2
+SELECT @step:=step_id
 FROM HowTosSteps
-WHERE how_to_id = 1;
+WHERE how_to_id = (
+	SELECT how_to_id
+	FROM HowTosUriIds
+	WHERE uri_id="a9d8cd7a")
+    AND pos = 0;
+# then
+UPDATE HowTosSteps
+SET pos = pos - 1
+WHERE how_to_id = (
+	SELECT how_to_id
+	FROM HowTosUriIds
+	WHERE uri_id="a9d8cd7a") # currently selected howto
+AND pos > 0 AND pos <= 2; # old position / new position
+# then
+UPDATE HowTosSteps
+SET pos = 2 # new position
+WHERE how_to_id = (
+	SELECT how_to_id
+	FROM HowTosUriIds
+	WHERE uri_id="a9d8cd7a") # currently selected howto
+AND step_id = @step; # currently selected step
 
-# Move from Top to Bottom -> Move 1 between 3 and 4
+# Move step up -> Move 2 to 0
+SELECT @step:=step_id
+FROM HowTosSteps
+WHERE how_to_id = (
+	SELECT how_to_id
+	FROM HowTosUriIds
+	WHERE uri_id="l9d86e5s")
+    AND pos = 2;
+# then    
 UPDATE HowTosSteps
-SET pos = pos -1
-WHERE how_to_id = 1 # currently selected howto
-AND pos > 1 AND pos <= 3; # old position / new position
+SET pos = pos + 1
+WHERE how_to_id = (
+	SELECT how_to_id
+	FROM HowTosUriIds
+	WHERE uri_id="l9d86e5s") # currently selected howto
+AND pos < 2 AND pos >= 0; # old position / new position
+# then
 UPDATE HowTosSteps
-SET pos = 3 # new position
-WHERE how_to_id = 1 # currently selected howto
-AND step_id = 1; # currently selected step
+SET pos = 0	# new position
+WHERE how_to_id = (
+	SELECT how_to_id
+	FROM HowTosUriIds
+	WHERE uri_id="l9d86e5s") # currently selected howto
+AND step_id = @step;  # currently selected step
 
-# Move from Bottom to Top -> Move 3 between 1 and 2
-UPDATE HowTosSteps
-SET pos = pos +1
-WHERE how_to_id = 1 # currently selected howto
-AND pos < 3 AND pos >= 1; # old position / new position
-UPDATE HowTosSteps
-SET pos = 1	# new position
-WHERE how_to_id = 1 # currently selected howto
-AND step_id = 7; # currently selected step
 
-/*
-INSERT INTO HowTosSteps (how_to_id, step_id, pos) VALUES (1, 1, 3); # Doesn't work
-*/
-# Similar thing for SuperSteps...
+# -----------------------------------------------------------------------------
+#    6.2 Change Order of Substeps djc847dj
+# -----------------------------------------------------------------------------
+# Move step down -> Move 0 to 1
+SELECT @step:=step_id
+FROM Super
+WHERE super_id = (
+	SELECT step_id
+	FROM StepsUriIds
+	WHERE uri_id="djc847dj")
+    AND pos = 0;
+# then
+UPDATE Super
+SET pos = pos - 1
+WHERE super_id = (
+	SELECT step_id
+	FROM StepsUriIds
+	WHERE uri_id="djc847dj")
+AND pos > 0 AND pos <= 1;
+# then
+UPDATE Super
+SET pos = 1
+WHERE super_id = (
+	SELECT step_id
+	FROM StepsUriIds
+	WHERE uri_id="djc847dj")
+AND step_id = @step;
+
+# Move step up -> Move 1 to 0
+SELECT @step:=step_id
+FROM Super
+WHERE super_id = (
+	SELECT step_id
+	FROM StepsUriIds
+	WHERE uri_id="djc847dj")
+    AND pos = 1;
+# then    
+UPDATE Super
+SET pos = pos + 1
+WHERE super_id = (
+	SELECT step_id
+	FROM StepsUriIds
+	WHERE uri_id="djc847dj")
+AND pos < 1 AND pos >= 0;
+# then
+UPDATE Super
+SET pos = 0
+WHERE super_id = (
+	SELECT step_id
+	FROM StepsUriIds
+	WHERE uri_id="djc847dj")
+AND step_id = @step;

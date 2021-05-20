@@ -1,5 +1,7 @@
 # How To's ![build-status](https://img.shields.io/docker/cloud/automated/tiveritz/how-tos-api) ![build-status](https://img.shields.io/docker/cloud/build/tiveritz/how-tos-api)
-This Project consists of a collection of Web Applications that allow you to manage, edit and view How To's in the form of Step-By-Step procedures. An important key aspect is the modularity of the documentation. Reusable steps, pictures, explanations, links and so on are a core concept and the database is designed with that in mind.
+This Project consists of a collection of Web Applications that allow you to manage, edit and view How To's in the form of Step-By-Step procedures. An important key aspect is the modularity of the documentation. Reusable steps, pictures, explanations, links are a core concept and the database is designed with that in mind.
+
+No ORM is used, the database and all queries are designed from scratch.
 
 ### [Core API](https://github.com/tiveritz/how-tos-api)
 The REST API that handles all database interactions on the documentation database.<br>
@@ -13,9 +15,9 @@ Webapplications that allow content management and a viewer for the users. Consum
 * HTTPS over SSL
 * API versioning preparation
 * Beautiful URLs
-* DELETE with recycle bin (Restoring may be a bit tricky, because the content is very stricktly linked)
 * Basic authentication (Over access token?)
 * Ensured data integrity
+* DELETE with recycle bin (Restoring may be a bit tricky, because the content is very stricktly linked)
 <br/>
 
 | BASE                     | URL                  | GET   | POST  | PUT   | PATCH | DELETE |

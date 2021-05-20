@@ -58,6 +58,7 @@ namespace HowTosApi.Controllers
                     WHERE uri_id=@stepUriId
                     )
             ORDER BY ts_update DESC;";
+        private string GetAllStepsQuery = @"SELECT * FROM GetSteps ORDER BY ts_update DESC;";
         private string CreateQuery = @"
             INSERT INTO Steps (title)
             VALUES (@title)";
@@ -86,7 +87,7 @@ namespace HowTosApi.Controllers
         public List<StepListItem> GetAll()
         {
             MySqlCommand cmd = Db.Connection.CreateCommand();
-            cmd.CommandText = GetAllQuery;
+            cmd.CommandText = GetAllStepsQuery;
 
             List<StepListItem> steps = QueryRead(cmd);
 

@@ -8,7 +8,8 @@ namespace HowTosApi.Controllers
     public class HowTosQuery
     {
         private AppDb Db;
-        private string GetAllHowTosQuery = @"SELECT * FROM GetHowTos;";
+        private string GetAllHowTosQuery = @"
+            SELECT * FROM GetHowTos ORDER BY ts_update DESC;";
         private string CreateQuery = @"
             INSERT INTO HowTos (title)
             VALUES (@title)";

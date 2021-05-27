@@ -394,7 +394,7 @@ AND step_id = @step;  # currently selected step
 
 
 # -----------------------------------------------------------------------------
-#    6.2 Change Order of Substeps djc847dj
+#    6.2 Change Order of Substeps
 # -----------------------------------------------------------------------------
 # Move step down -> Move 0 to 1
 SELECT @step:=step_id

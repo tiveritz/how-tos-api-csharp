@@ -8,7 +8,8 @@ namespace HowTosApi.Controllers
     public class StepQuery
     {
         private AppDb Db;
-        private string GetStepByIdQuery = @"SELECT * FROM GetSteps WHERE uri_id=@uriId;";
+        private string GetStepByIdQuery = @"
+            SELECT * FROM GetSteps WHERE uri_id=@uriId;";
         private string DeleteStepQuery = @"
             DELETE FROM Steps
             WHERE id = (

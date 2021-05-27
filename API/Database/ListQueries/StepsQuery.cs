@@ -9,23 +9,14 @@ namespace HowTosApi.Controllers
     public class StepsQuery
     {
         private AppDb Db;
-        private string GetAllStepsQuery = @"SELECT * FROM GetSteps ORDER BY ts_update DESC;";
-        private string GetHowToLinkableQuery = @"
-            SELECT StepsUriIds.uri_id, Steps.title, Steps.ts_create, Steps.ts_update,
-            CASE
-                WHEN Steps.id IN (SELECT DISTINCT super_id FROM Super) THEN true ELSE false
-            END AS is_super
-            FROM Steps
-            JOIN StepsUriIds ON StepsUriIds.step_id = Steps.id
-            WHERE id NOT IN (
-                SELECT id
-                FROM Steps
-                JOIN HowTosSteps ON HowTosSteps.step_id = Steps.id
-                WHERE HowTosSteps.how_to_id = (
-                    SELECT how_to_id
-                    FROM HowTosUriIds
-                    WHERE uri_id=@howToUriId)
-                ORDER BY HowTosSteps.pos);";
+        private string GetAllStepsQuery = @"
+            SELECT * FROM GetSteps ORDER BY ts_update DESC;";
+        private string GetHowToLinkableStepsQuery = @"
+            SELECT * FROM GetSteps
+            WHERE uri_id NOT IN (
+                SELECT step_uri_id FROM GetStepHowTos WHERE how_to_uri_id=@howToUriId
+                )
+            ORDER BY ts_update DESC;";
     
         private string GetStepLinkableQuery = @"
             SELECT StepsUriIds.uri_id, Steps.title, Steps.ts_create, Steps.ts_update,
@@ -108,10 +99,10 @@ namespace HowTosApi.Controllers
             return steps;
         }
 
-        public List<StepListItem> GetHowToLinkable(string uriId)
+        public List<StepListItem> GetHowToLinkableSteps(string uriId)
         {
             MySqlCommand cmd = Db.Connection.CreateCommand();
-            cmd.CommandText = GetHowToLinkableQuery;
+            cmd.CommandText = GetHowToLinkableStepsQuery;
             cmd.Parameters.AddWithValue("@howToUriId", uriId);
 
             return QueryRead(cmd);

@@ -83,7 +83,7 @@ namespace HowTosApi.Controllers
         public IActionResult GetLinkableSteps(string id)
         {
             StepsQuery sq = new StepsQuery(Db);
-            return Ok(sq.GetHowToLinkable(id));
+            return Ok(sq.GetHowToLinkableSteps(id));
   
         }
 

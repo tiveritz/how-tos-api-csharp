@@ -99,6 +99,33 @@ namespace HowTosApi.Controllers
                 WHERE uri_id=@superUriId
             ) AND uri_id=@stepUriId;";
         public string DeleteStepFromHowToQuery = @"
+            SELECT @del_pos := HowTosSteps.pos
+            FROM Steps
+            JOIN StepsUriIds ON StepsUriIds.step_id = Steps.id
+            JOIN HowTosSteps ON HowTosSteps.step_id = Steps.id
+            WHERE HowTosSteps.how_to_id = (
+                SELECT how_to_id
+                FROM HowTosUriIds
+                WHERE uri_id=@howToUriId)
+                AND StepsUriIds.uri_id = @stepUriId;
+
+            SELECT @max_pos := MAX(HowTosSteps.pos)
+            FROM Steps
+            JOIN StepsUriIds ON StepsUriIds.step_id = Steps.id
+            JOIN HowTosSteps ON HowTosSteps.step_id = Steps.id
+            WHERE HowTosSteps.how_to_id = (
+                SELECT how_to_id
+                FROM HowTosUriIds
+                WHERE uri_id=@howToUriId);
+                
+            UPDATE HowTosSteps
+            SET pos = pos - 1
+            WHERE how_to_id = (
+                SELECT how_to_id
+                FROM HowTosUriIds
+                WHERE uri_id='dac52775')
+            AND pos > @del_pos AND pos <= @max_pos;
+
             DELETE FROM HowTosSteps
             WHERE how_to_id = (
                 SELECT how_to_id
@@ -110,6 +137,33 @@ namespace HowTosApi.Controllers
                 WHERE uri_id=@stepUriId
             );";
         public string DeleteStepFromSuperQuery = @"
+            SELECT @del_pos := Super.pos
+            FROM Steps
+            JOIN StepsUriIds ON StepsUriIds.step_id = Steps.id
+            JOIN Super ON Super.step_id = Steps.id
+            WHERE Super.super_id = (
+                SELECT step_id
+                FROM StepsUriIds
+                WHERE uri_id=@superUriId)
+                AND StepsUriIds.uri_id=@stepUriId;
+
+            SELECT @max_pos := MAX(Super.pos)
+            FROM Steps
+            JOIN StepsUriIds ON StepsUriIds.step_id = Steps.id
+            JOIN Super ON Super.step_id = Steps.id
+            WHERE Super.super_id = (
+                SELECT step_id
+                FROM StepsUriIds
+                WHERE uri_id=@superUriId);
+                
+            UPDATE Super
+            SET pos = pos - 1
+            WHERE super_id = (
+                SELECT step_id
+                FROM StepsUriIds
+                WHERE uri_id=@superUriId)
+            AND pos > @del_pos AND pos <= @max_pos;
+
             DELETE FROM Super
             WHERE super_id = (
                 SELECT step_id

@@ -14,6 +14,9 @@
 # 6. Order Queries
 # 6.1 Change Order of How To's
 # 6.2 Change Order of Substeps
+# 7. Unlink Queries
+# 7.1 Unlink Step from How To
+# 7.2 Unlink Substep from Superstep
 
 
 # -----------------------------------------------------------------------------
@@ -65,7 +68,7 @@ ORDER BY ts_update DESC;
 SELECT HowTosUriIds.uri_id, HowTos.title, HowTos.ts_create, HowTos.ts_update
 FROM HowTos
 JOIN HowTosUriIds ON HowTos.id=HowTosUriIds.how_to_id
-WHERE uri_id="a9d8cd7a";
+WHERE uri_id='a9d8cd7a';
 
 # Get uri_id from how_to_id
 SELECT uri_id
@@ -75,7 +78,7 @@ WHERE how_to_id=1;
 # Get how_to_id from uri_id
 SELECT how_to_id
 FROM HowTosUriIds
-WHERE uri_id="a9d8cd7a";
+WHERE uri_id='a9d8cd7a';
 
 # Delete How To
 # All connected tables are cascade deleted
@@ -83,16 +86,16 @@ DELETE FROM HowTos
 WHERE id = (
 	SELECT how_to_id
     FROM HowTosUriIds
-    WHERE uri_id="a9d8cd7a"
+    WHERE uri_id='a9d8cd7a'
 );
 
 # Change How To name
 UPDATE HowTos
-SET title = "changed title"
+SET title = 'changed title'
 WHERE id = (
 	SELECT how_to_id
 	FROM HowTosUriIds
-	WHERE uri_id="a9d8cd7a"
+	WHERE uri_id='a9d8cd7a'
 );
 
 # Link Step to How To   
@@ -101,12 +104,12 @@ SET
 	how_to_id = (
 		SELECT how_to_id
 		FROM HowTosUriIds
-		WHERE uri_id="a9d8cd7a"
+		WHERE uri_id='a9d8cd7a'
 	),
 	step_id = (
 		SELECT step_id
 		FROM StepsUriIds
-		WHERE uri_id="d874djd9"
+		WHERE uri_id='d874djd9'
 	),
 	pos = (
 		CASE
@@ -116,7 +119,7 @@ SET
 					WHERE how_to_id = (
 						SELECT how_to_id
 						FROM HowTosUriIds
-						WHERE uri_id="a9d8cd7a"
+						WHERE uri_id='a9d8cd7a'
 					)
 				) = 0
 			THEN 0
@@ -126,7 +129,7 @@ SET
 				WHERE how_to_id = (
 					SELECT how_to_id
 					FROM HowTosUriIds
-					WHERE uri_id="a9d8cd7a"
+					WHERE uri_id='a9d8cd7a'
 					)
                 )
 		END
@@ -146,7 +149,7 @@ WHERE id NOT IN (
 	WHERE HowTosSteps.how_to_id = (
 		SELECT how_to_id
 		FROM HowTosUriIds
-		WHERE uri_id="a9d8cd7a")
+		WHERE uri_id='a9d8cd7a')
 	ORDER BY HowTosSteps.pos);
 
 
@@ -170,7 +173,7 @@ CASE
 END AS is_super
 FROM Steps
 JOIN StepsUriIds ON Steps.id=StepsUriIds.step_id
-WHERE uri_id="2ls98s7e";
+WHERE uri_id='2ls98s7e';
 
 # Get uri_id from step_id
 SELECT uri_id
@@ -180,7 +183,7 @@ WHERE step_id=1;
 # Get step from uri_id
 SELECT step_id
 FROM StepsUriIds
-WHERE uri_id="dj8d7f6e";
+WHERE uri_id='dj8d7f6e';
 
 # List all Steps of a specific How To by uri_id, order by position
 SELECT StepsUriIds.uri_id, Steps.title,
@@ -193,7 +196,7 @@ JOIN HowTosSteps ON HowTosSteps.step_id = Steps.id
 WHERE HowTosSteps.how_to_id = (
     SELECT how_to_id
 	FROM HowTosUriIds
-	WHERE uri_id="a9d8cd7a")
+	WHERE uri_id='a9d8cd7a')
 ORDER BY HowTosSteps.pos;
 
 # List all SubSteps of a Step
@@ -207,7 +210,7 @@ JOIN Super ON Super.step_id = Steps.id
 WHERE Super.super_id = (
 	SELECT step_id
 	FROM StepsUriIds
-	WHERE uri_id="djc847dj")
+	WHERE uri_id='djc847dj')
 ORDER BY Super.pos;
 
 # Show the explanation of a specific step
@@ -221,16 +224,16 @@ DELETE FROM Steps
 WHERE id = (
 	SELECT step_id
     FROM StepsUriIds
-    WHERE uri_id="dj8d7f6e"
+    WHERE uri_id='dj8d7f6e'
 );
 
 # Change Step name
 UPDATE Steps
-SET title = "changed title"
+SET title = 'changed title'
 WHERE id = (
 	SELECT step_id
 	FROM StepsUriIds
-	WHERE uri_id="dj8d7f6e"
+	WHERE uri_id='dj8d7f6e'
 );
 
 # Link Step to Super 
@@ -239,12 +242,12 @@ SET
 	super_id = (
 		SELECT step_id
 		FROM StepsUriIds
-		WHERE uri_id="d874djd9"
+		WHERE uri_id='d874djd9'
 	),
 	step_id = (
 		SELECT step_id
 		FROM StepsUriIds
-		WHERE uri_id="2ls98s7e"
+		WHERE uri_id='2ls98s7e'
 	),
 	pos = (
 		CASE
@@ -254,7 +257,7 @@ SET
 						WHERE super_id = (
 							SELECT step_id
 							FROM StepsUriIds
-							WHERE uri_id="d874djd9"
+							WHERE uri_id='d874djd9'
 						)
 				) = 0
 			THEN 0
@@ -264,7 +267,7 @@ SET
 					WHERE super_id = (
 						SELECT step_id
 						FROM StepsUriIds
-						WHERE uri_id="d874djd9"
+						WHERE uri_id='d874djd9'
 					)
                 )
 		END
@@ -285,13 +288,13 @@ WHERE id NOT IN ( # can not link direct children
 	WHERE Super.super_id = (
 		SELECT step_id
 		FROM StepsUriIds
-		WHERE uri_id="2ls98s7e"
+		WHERE uri_id='2ls98s7e'
         )
 	)
 AND id != (
 		SELECT step_id
 		FROM StepsUriIds
-		WHERE uri_id="2ls98s7e"
+		WHERE uri_id='2ls98s7e'
         )
 ORDER BY ts_update DESC;
 
@@ -309,7 +312,7 @@ WHERE HowTos.id IN (
     WHERE step_id = (
 		SELECT step_id
 		FROM StepsUriIds
-		WHERE uri_id="a93jdjc7"
+		WHERE uri_id='a93jdjc7'
     )
 );
 
@@ -323,7 +326,7 @@ SELECT super_id
     WHERE step_id IN (
 		SELECT step_id
         FROM StepsUriIds
-        WHERE uri_id = "a00d9s8e"
+        WHERE uri_id = 'a00d9s8e'
     )
 );
 
@@ -335,7 +338,7 @@ JOIN Super ON Super.step_id = Steps.id
 WHERE Super.super_id = (
 	SELECT step_id
 	FROM StepsUriIds
-	WHERE uri_id="d874djd9")
+	WHERE uri_id='d874djd9')
 ORDER BY Super.pos;
 
 # -----------------------------------------------------------------------------
@@ -348,7 +351,7 @@ FROM HowTosSteps
 WHERE how_to_id = (
 	SELECT how_to_id
 	FROM HowTosUriIds
-	WHERE uri_id="a9d8cd7a")
+	WHERE uri_id='a9d8cd7a')
     AND pos = 0;
 # then
 UPDATE HowTosSteps
@@ -356,7 +359,7 @@ SET pos = pos - 1
 WHERE how_to_id = (
 	SELECT how_to_id
 	FROM HowTosUriIds
-	WHERE uri_id="a9d8cd7a") # currently selected howto
+	WHERE uri_id='a9d8cd7a') # currently selected howto
 AND pos > 0 AND pos <= 2; # old position / new position
 # then
 UPDATE HowTosSteps
@@ -364,7 +367,7 @@ SET pos = 2 # new position
 WHERE how_to_id = (
 	SELECT how_to_id
 	FROM HowTosUriIds
-	WHERE uri_id="a9d8cd7a") # currently selected howto
+	WHERE uri_id='a9d8cd7a') # currently selected howto
 AND step_id = @step; # currently selected step
 
 # Move step up -> Move 2 to 0
@@ -373,7 +376,7 @@ FROM HowTosSteps
 WHERE how_to_id = (
 	SELECT how_to_id
 	FROM HowTosUriIds
-	WHERE uri_id="l9d86e5s")
+	WHERE uri_id='l9d86e5s')
     AND pos = 2;
 # then    
 UPDATE HowTosSteps
@@ -381,7 +384,7 @@ SET pos = pos + 1
 WHERE how_to_id = (
 	SELECT how_to_id
 	FROM HowTosUriIds
-	WHERE uri_id="l9d86e5s") # currently selected howto
+	WHERE uri_id='l9d86e5s') # currently selected howto
 AND pos < 2 AND pos >= 0; # old position / new position
 # then
 UPDATE HowTosSteps
@@ -389,7 +392,7 @@ SET pos = 0	# new position
 WHERE how_to_id = (
 	SELECT how_to_id
 	FROM HowTosUriIds
-	WHERE uri_id="l9d86e5s") # currently selected howto
+	WHERE uri_id='l9d86e5s') # currently selected howto
 AND step_id = @step;  # currently selected step
 
 
@@ -402,7 +405,7 @@ FROM Super
 WHERE super_id = (
 	SELECT step_id
 	FROM StepsUriIds
-	WHERE uri_id="djc847dj")
+	WHERE uri_id='djc847dj')
     AND pos = 0;
 # then
 UPDATE Super
@@ -410,7 +413,7 @@ SET pos = pos - 1
 WHERE super_id = (
 	SELECT step_id
 	FROM StepsUriIds
-	WHERE uri_id="djc847dj")
+	WHERE uri_id='djc847dj')
 AND pos > 0 AND pos <= 1;
 # then
 UPDATE Super
@@ -418,7 +421,7 @@ SET pos = 1
 WHERE super_id = (
 	SELECT step_id
 	FROM StepsUriIds
-	WHERE uri_id="djc847dj")
+	WHERE uri_id='djc847dj')
 AND step_id = @step;
 
 # Move step up -> Move 1 to 0
@@ -427,7 +430,7 @@ FROM Super
 WHERE super_id = (
 	SELECT step_id
 	FROM StepsUriIds
-	WHERE uri_id="djc847dj")
+	WHERE uri_id='djc847dj')
     AND pos = 1;
 # then    
 UPDATE Super
@@ -435,7 +438,7 @@ SET pos = pos + 1
 WHERE super_id = (
 	SELECT step_id
 	FROM StepsUriIds
-	WHERE uri_id="djc847dj")
+	WHERE uri_id='djc847dj')
 AND pos < 1 AND pos >= 0;
 # then
 UPDATE Super
@@ -443,5 +446,96 @@ SET pos = 0
 WHERE super_id = (
 	SELECT step_id
 	FROM StepsUriIds
-	WHERE uri_id="djc847dj")
+	WHERE uri_id='djc847dj')
 AND step_id = @step;
+
+# -----------------------------------------------------------------------------
+#    7 Unlink Queries
+#    7.1 Unlink Step from How To
+# -----------------------------------------------------------------------------
+# Get position to delete of Step from How To
+SELECT @del_pos := HowTosSteps.pos
+FROM Steps
+JOIN StepsUriIds ON StepsUriIds.step_id = Steps.id
+JOIN HowTosSteps ON HowTosSteps.step_id = Steps.id
+WHERE HowTosSteps.how_to_id = (
+	SELECT how_to_id
+	FROM HowTosUriIds
+	WHERE uri_id='dac52775')
+    AND StepsUriIds.uri_id = '83994b7f';
+
+# Get highest position
+SELECT @max_pos := MAX(HowTosSteps.pos)
+FROM Steps
+JOIN StepsUriIds ON StepsUriIds.step_id = Steps.id
+JOIN HowTosSteps ON HowTosSteps.step_id = Steps.id
+WHERE HowTosSteps.how_to_id = (
+	SELECT how_to_id
+	FROM HowTosUriIds
+	WHERE uri_id='dac52775');
+    
+# Assign new positions
+UPDATE HowTosSteps
+SET pos = pos - 1
+WHERE how_to_id = (
+	SELECT how_to_id
+	FROM HowTosUriIds
+	WHERE uri_id='dac52775')
+AND pos > @del_pos AND pos <= @max_pos;
+
+# Delete How To
+DELETE FROM HowTosSteps
+WHERE how_to_id = (
+	SELECT how_to_id
+	FROM HowTosUriIds
+	WHERE uri_id=@howToUriId
+) AND step_id = (
+	SELECT step_id
+	FROM StepsUriIds
+	WHERE uri_id=@stepUriId
+);
+
+# -----------------------------------------------------------------------------
+#    7.2 Unlink Substep from Superstep
+# -----------------------------------------------------------------------------
+# Get position to delete of Step in Super
+SELECT @del_pos := Super.pos
+FROM Steps
+JOIN StepsUriIds ON StepsUriIds.step_id = Steps.id
+JOIN Super ON Super.step_id = Steps.id
+WHERE Super.super_id = (
+	SELECT step_id
+	FROM StepsUriIds
+	WHERE uri_id='0e34a1cf')
+    AND StepsUriIds.uri_id='c86c28d4';
+
+# Get highest position
+SELECT @max_pos := MAX(Super.pos)
+FROM Steps
+JOIN StepsUriIds ON StepsUriIds.step_id = Steps.id
+JOIN Super ON Super.step_id = Steps.id
+WHERE Super.super_id = (
+	SELECT step_id
+	FROM StepsUriIds
+	WHERE uri_id='0e34a1cf');
+    
+# Assign new positions
+UPDATE Super
+SET pos = pos - 1
+WHERE super_id = (
+	SELECT step_id
+	FROM StepsUriIds
+	WHERE uri_id='0e34a1cf')
+AND pos > @del_pos AND pos <= @max_pos;
+
+# Delete Substep
+DELETE FROM Super
+WHERE super_id = (
+	SELECT step_id
+	FROM StepsUriIds
+	WHERE uri_id='0e34a1cf'
+) AND step_id = (
+	SELECT step_id
+	FROM StepsUriIds
+	WHERE uri_id='c86c28d4'
+);

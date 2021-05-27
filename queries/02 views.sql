@@ -31,7 +31,7 @@ CREATE VIEW GetStepHowTos AS
         StepsUriIds.uri_id AS step_uri_id,
 		HowTosUriIds.uri_id AS how_to_uri_id
 	FROM Steps
-    JOIN StepsUriIds ON StepsUriIDs.step_id = Steps.id
+    JOIN StepsUriIds ON StepsUriIds.step_id = Steps.id
 	JOIN HowTosSteps ON HowTosSteps.step_id = Steps.id
 	JOIN HowTosUriIds ON HowTosUriIds.how_to_id = HowTosSteps.how_to_id;
 

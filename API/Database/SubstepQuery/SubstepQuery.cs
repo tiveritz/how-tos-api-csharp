@@ -123,7 +123,7 @@ namespace HowTosApi.Controllers
             WHERE how_to_id = (
                 SELECT how_to_id
                 FROM HowTosUriIds
-                WHERE uri_id='dac52775')
+                WHERE uri_id=@howToUriId)
             AND pos > @del_pos AND pos <= @max_pos;
 
             DELETE FROM HowTosSteps
